@@ -7,6 +7,7 @@ public class SessionManager {
     private static final String PREF_NAME = "SolidaryHandsSession";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
     private static final String KEY_ACCESS_TOKEN = "accessToken";
+    private static final String KEY_REFRESH_TOKEN = "refreshToken";
     private static final String KEY_USER_ID = "userId";
     private static final String KEY_USER_EMAIL = "userEmail";
     private static final String KEY_USER_NAME = "userName";
@@ -38,6 +39,20 @@ public class SessionManager {
         editor.apply();
     }
 
+    /** Guarda el refresh token (sirve para renovar el access token cuando vence, cada ~1 hora). */
+    public void saveRefreshToken(String refreshToken) {
+        if (refreshToken == null) return;
+        editor.putString(KEY_REFRESH_TOKEN, refreshToken);
+        editor.apply();
+    }
+
+    /** Guarda los tokens nuevos después de renovar la sesión. */
+    public synchronized void updateTokens(String accessToken, String refreshToken) {
+        if (accessToken != null) editor.putString(KEY_ACCESS_TOKEN, accessToken);
+        if (refreshToken != null) editor.putString(KEY_REFRESH_TOKEN, refreshToken);
+        editor.apply();
+    }
+
     public void updateUserName(String fullName) {
         editor.putString(KEY_USER_NAME, fullName);
         editor.apply();
@@ -54,6 +69,10 @@ public class SessionManager {
 
     public String getAccessToken() {
         return pref.getString(KEY_ACCESS_TOKEN, null);
+    }
+
+    public String getRefreshToken() {
+        return pref.getString(KEY_REFRESH_TOKEN, null);
     }
 
     public String getUserId() {

@@ -1,0 +1,12 @@
+01_polera
+02_camisa
+03_poleron_chompa
+04_short
+05_pantalon
+06_zapatillas
+07_licuadora
+08_microondas
+09_plancha
+10_silla
+11_mochila
+12_juguete

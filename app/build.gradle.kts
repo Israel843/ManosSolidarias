@@ -31,6 +31,11 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
+    // Necesario para que el modelo de la red neuronal (.tflite) no se comprima dentro del APK
+    androidResources {
+        noCompress += "tflite"
+    }
 }
 
 dependencies {
@@ -45,6 +50,19 @@ dependencies {
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
     implementation(libs.gson)
+
+    // Red neuronal local (TensorFlow Lite) + respaldo ML Kit
+    implementation(libs.tensorflow.lite)
+    implementation(libs.mlkit.image.labeling)
+
+    // Miniaturas de los videos de YouTube
+    implementation(libs.glide)
+
+    // Cámara dentro de la aplicación (CameraX)
+    implementation(libs.camera.core)
+    implementation(libs.camera.camera2)
+    implementation(libs.camera.lifecycle)
+    implementation(libs.camera.view)
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)

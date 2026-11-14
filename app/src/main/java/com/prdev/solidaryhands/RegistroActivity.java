@@ -15,7 +15,10 @@ import com.prdev.solidaryhands.models.SignUpRequest;
 import com.prdev.solidaryhands.models.User;
 import com.prdev.solidaryhands.network.SessionManager;
 import com.prdev.solidaryhands.network.SupabaseClient;
+import com.prdev.solidaryhands.network.SupabaseConfig;
+import com.prdev.solidaryhands.network.SupabaseError;
 
+import java.net.UnknownHostException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -111,7 +114,7 @@ public class RegistroActivity extends AppCompatActivity {
         String nombreCompleto = (nombre + " " + paterno + " " + materno).trim();
 
         // Si la URL de Supabase es la plantilla predeterminada, registrar en modo local de demostración
-        if (com.prdev.solidaryhands.network.SupabaseConfig.SUPABASE_URL.contains("TU_PROYECTO")) {
+        if (SupabaseConfig.SUPABASE_URL.contains("TU_PROYECTO")) {
             Toast.makeText(RegistroActivity.this, "Registrando usuario...", Toast.LENGTH_SHORT).show();
             SessionManager.getInstance(RegistroActivity.this)
                     .saveSession("token_demo", "demo_user", correo, nombreCompleto, telefono);
@@ -155,6 +158,8 @@ public class RegistroActivity extends AppCompatActivity {
                             if (token != null && !token.isEmpty() && userId != null) {
                                 SessionManager.getInstance(RegistroActivity.this)
                                         .saveSession(token, userId, correo, nombreCompleto, telefono);
+                                SessionManager.getInstance(RegistroActivity.this)
+                                        .saveRefreshToken(authResp.getRefreshToken());
 
                                 // Respaldo: asegurar perfil en la tabla profiles
                                 asegurarPerfilEnBaseDeDatos(userId, correo, nombre, paterno, materno, telefono);
@@ -166,17 +171,16 @@ public class RegistroActivity extends AppCompatActivity {
                                 startActivity(intent);
                                 finish();
                             } else {
+                                // Supabase NO devolvió sesión: tiene activada la confirmación de correo.
                                 Toast.makeText(RegistroActivity.this,
-                                        "¡Cuenta creada exitosamente! Inicia sesión con tus credenciales.",
+                                        "¡Cuenta creada! Revisa tu correo y abre el enlace de confirmación antes de iniciar sesión.",
                                         Toast.LENGTH_LONG).show();
                                 finish();
                             }
                         } else {
-                            String errorMsg = "Error en el registro. ";
-                            if (response.code() == 400 || response.code() == 422) {
-                                errorMsg += "El correo ya podría estar registrado o los datos no son válidos.";
-                            }
-                            Toast.makeText(RegistroActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+                            Toast.makeText(RegistroActivity.this,
+                                    SupabaseError.mensajeRegistro(response),
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
 
@@ -185,17 +189,10 @@ public class RegistroActivity extends AppCompatActivity {
                         btnRegistrar.setEnabled(true);
                         btnRegistrar.setText("Registrar");
 
-                        if (com.prdev.solidaryhands.network.SupabaseConfig.SUPABASE_URL.contains("TU_PROYECTO")
-                                || t instanceof java.net.UnknownHostException) {
-                            Toast.makeText(RegistroActivity.this, "Registrando usuario en modo local...", Toast.LENGTH_SHORT).show();
-                            String nombreCompleto = (nombre + " " + paterno + " " + materno).trim();
-                            SessionManager.getInstance(RegistroActivity.this)
-                                    .saveSession("token_demo", "demo_user", correo, nombreCompleto, telefono);
-
-                            Intent intent = new Intent(RegistroActivity.this, HomeActivity.class);
-                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                            startActivity(intent);
-                            finish();
+                        if (t instanceof UnknownHostException) {
+                            Toast.makeText(RegistroActivity.this,
+                                    "Sin conexión a internet. Verifica tu red e intenta de nuevo.",
+                                    Toast.LENGTH_LONG).show();
                         } else {
                             Toast.makeText(RegistroActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_LONG).show();
                         }

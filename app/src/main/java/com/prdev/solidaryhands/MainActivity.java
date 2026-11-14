@@ -16,7 +16,10 @@ import com.prdev.solidaryhands.models.Perfil;
 import com.prdev.solidaryhands.models.User;
 import com.prdev.solidaryhands.network.SessionManager;
 import com.prdev.solidaryhands.network.SupabaseClient;
+import com.prdev.solidaryhands.network.SupabaseConfig;
+import com.prdev.solidaryhands.network.SupabaseError;
 
+import java.net.UnknownHostException;
 import java.util.List;
 import java.util.Map;
 
@@ -37,10 +40,14 @@ public class MainActivity extends AppCompatActivity {
 
         sessionManager = SessionManager.getInstance(this);
 
-        // Si ya hay una sesión activa, redirigir directo al Home
+        // Si ya hay una sesión activa, redirigir directo al Home (limpia la sesión demo si venía de pruebas locales)
         if (sessionManager.isLoggedIn()) {
-            irAHome();
-            return;
+            if ("demo_user".equals(sessionManager.getUserId())) {
+                sessionManager.clearSession();
+            } else {
+                irAHome();
+                return;
+            }
         }
 
         setContentView(R.layout.activity_main);
@@ -63,7 +70,9 @@ public class MainActivity extends AppCompatActivity {
 
     private void iniciarSesionSupabase() {
         String correo = edtUsuario.getText().toString().trim();
-        String contrasena = edtContrasena.getText().toString().trim();
+        // IMPORTANTE: la contraseña NO se recorta (trim). En el registro tampoco se recorta,
+        // así que debe ser exactamente igual en los dos lados.
+        String contrasena = edtContrasena.getText().toString();
 
         if (correo.isEmpty()) {
             edtUsuario.setError("Ingresa tu correo electrónico");
@@ -84,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Si la URL de Supabase aún no ha sido configurada con el proyecto real, iniciar en modo demostración/local
-        if (com.prdev.solidaryhands.network.SupabaseConfig.SUPABASE_URL.contains("TU_PROYECTO")) {
+        if (SupabaseConfig.SUPABASE_URL.contains("TU_PROYECTO")) {
             Toast.makeText(MainActivity.this, "Iniciando sesión en modo demostración...", Toast.LENGTH_SHORT).show();
             sessionManager.saveSession("token_demo", "demo_user", correo, "Usuario Solidario", "+591 71234567");
             irAHome();
@@ -116,16 +125,21 @@ public class MainActivity extends AppCompatActivity {
                             String telefonoInicial = "";
                             if (user != null && user.getUserMetadata() != null) {
                                 Map<String, Object> meta = user.getUserMetadata();
-                                if (meta.containsKey("nombre")) {
-                                    nombreInicial = String.valueOf(meta.get("nombre"));
+                                String nom = meta.get("nombre") != null ? String.valueOf(meta.get("nombre")) : "";
+                                String pat = meta.get("apellido_paterno") != null ? String.valueOf(meta.get("apellido_paterno")) : "";
+                                String mat = meta.get("apellido_materno") != null ? String.valueOf(meta.get("apellido_materno")) : "";
+                                String completo = (nom + " " + pat + " " + mat).trim();
+                                if (!completo.isEmpty()) {
+                                    nombreInicial = completo;
                                 }
-                                if (meta.containsKey("telefono")) {
+                                if (meta.get("telefono") != null) {
                                     telefonoInicial = String.valueOf(meta.get("telefono"));
                                 }
                             }
 
-                            // Guardar sesión
+                            // Guardar sesión (y el refresh token para renovarla cuando venza)
                             sessionManager.saveSession(token, userId, userEmail, nombreInicial, telefonoInicial);
+                            sessionManager.saveRefreshToken(authResp.getRefreshToken());
 
                             // Consultar perfil completo de Supabase en segundo plano
                             cargarYGuardarPerfilCompleto(userId);
@@ -134,11 +148,10 @@ public class MainActivity extends AppCompatActivity {
                             irAHome();
 
                         } else {
-                            String mensajeError = "Correo o contraseña incorrectos.";
-                            if (response.code() == 400) {
-                                mensajeError = "Credenciales incorrectas. Verifica tu correo y contraseña.";
-                            }
-                            Toast.makeText(MainActivity.this, mensajeError, Toast.LENGTH_LONG).show();
+                            // Ahora se muestra el motivo REAL que devuelve Supabase
+                            Toast.makeText(MainActivity.this,
+                                    SupabaseError.mensajeLogin(response),
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
 
@@ -147,14 +160,14 @@ public class MainActivity extends AppCompatActivity {
                         btnIniciarSesion.setEnabled(true);
                         btnIniciarSesion.setText("Iniciar sesión");
 
-                        // Si la URL de Supabase es la plantilla o falla la red, permitir acceso local para probar la app
-                        if (com.prdev.solidaryhands.network.SupabaseConfig.SUPABASE_URL.contains("TU_PROYECTO")
-                                || t instanceof java.net.UnknownHostException) {
-                            Toast.makeText(MainActivity.this, "Iniciando sesión en modo local/demostración...", Toast.LENGTH_SHORT).show();
-                            sessionManager.saveSession("token_demo", "demo_user", correo, "Carlos Mendoza", "+591 71234567");
-                            irAHome();
+                        if (t instanceof UnknownHostException) {
+                            Toast.makeText(MainActivity.this,
+                                    "Sin conexión a internet. Verifica tu red e intenta de nuevo.",
+                                    Toast.LENGTH_LONG).show();
                         } else {
-                            Toast.makeText(MainActivity.this, "Error de conexión: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this,
+                                    "Error de conexión: " + t.getMessage(),
+                                    Toast.LENGTH_LONG).show();
                         }
                     }
                 });

@@ -21,7 +21,7 @@
             android:layout_height="45dp"
             android:src="@android:drawable/ic_media_previous"
             android:background="@android:color/transparent"
-            android:tint="#287A5A"
+            android:backgroundTint="#287A5A"
             android:contentDescription="Volver"/>
 
         <TextView

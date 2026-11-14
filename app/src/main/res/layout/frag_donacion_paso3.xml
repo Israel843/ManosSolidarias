@@ -13,7 +13,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Análisis de imágenes con IA"
+            android:text="Análisis con red neuronal"
             android:textSize="23sp"
             android:textStyle="bold"
             android:textColor="#287A5A"/>
@@ -21,7 +21,7 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Estamos evaluando las fotografías de tu donación."
+            android:text="La red neuronal está evaluando las fotografías de tu donación y le dará una puntuación de 0 a 10."
             android:textSize="14sp"
             android:textColor="#718096"
             android:layout_marginTop="6dp"/>
@@ -39,7 +39,7 @@
             android:id="@+id/txtEstadoAnalisis"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Esperando análisis..."
+            android:text="Preparando análisis..."
             android:textColor="#287A5A"
             android:textStyle="bold"
             android:gravity="center"
@@ -105,7 +105,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Estado visible del objeto"
+                android:text="Puntuación del objeto (IA)"
                 android:textSize="17sp"
                 android:textStyle="bold"
                 android:textColor="#263C50"/>
@@ -133,7 +133,7 @@
                 android:id="@+id/txtDetalleObjeto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Evaluación de conservación y desgaste visible."
+                android:text="Reconocimiento del objeto por la IA y condición declarada."
                 android:textColor="#718096"
                 android:textSize="13sp"
                 android:layout_marginTop="8dp"/>

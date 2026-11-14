@@ -1,8 +1,16 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <!-- Base application theme. -->
-    <style name="Base.Theme.Solidaryhands" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <!-- Tema base de la aplicación.
+         CAMBIO: antes era Theme.Material3.DayNight.NoActionBar. Con el celular en modo oscuro,
+         el texto que escribías en los campos salía BLANCO sobre fondo blanco.
+         Ahora el tema es siempre claro y el texto de los campos es NEGRO. -->
+    <style name="Base.Theme.Solidaryhands" parent="Theme.Material3.Light.NoActionBar">
+        <!-- Texto negro en los campos de escritura -->
+        <item name="android:editTextColor">@color/texto_negro</item>
+        <item name="editTextColor">@color/texto_negro</item>
+        <!-- Texto de ayuda (hint) en gris -->
+        <item name="android:textColorHint">@color/texto_hint</item>
+        <!-- Texto negro por defecto (también en los Spinner / listas desplegables) -->
+        <item name="android:textColorPrimary">@color/texto_negro</item>
     </style>
 
     <style name="Theme.Solidaryhands" parent="Base.Theme.Solidaryhands" />

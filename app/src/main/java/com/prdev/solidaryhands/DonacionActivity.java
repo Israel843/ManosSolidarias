@@ -1,12 +1,33 @@
 package com.prdev.solidaryhands;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.os.Bundle;
 import android.content.Intent;
 import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+
+import com.prdev.solidaryhands.ai.DonationScorer;
+import com.prdev.solidaryhands.ai.ScoreResult;
+import com.prdev.solidaryhands.network.SessionManager;
+import com.prdev.solidaryhands.network.SupabaseClient;
+import com.prdev.solidaryhands.util.ImagenUtil;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Locale;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 @SuppressWarnings({"unchecked", "deprecation"})
 public class DonacionActivity extends Activity {
@@ -56,6 +77,17 @@ public class DonacionActivity extends Activity {
 
     private boolean analisisAceptado = false;
 
+    // RED NEURONAL (TFLite) + PUNTUACION
+    private DonationScorer scorer;
+    private ScoreResult ultimoResultado;
+    private int analisisId = 0;   // para ignorar resultados viejos si el usuario retrocede
+
+    private static final int REQ_GALERIA = 100;   // 100..103
+    private static final int REQ_CAMARA = 200;    // 200..203
+    private static final String[] NOMBRES_FOTO = {
+            "Fotografía frontal", "Fotografía trasera", "Detalle / Etiqueta", "Fotografía extra"
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,7 +100,18 @@ public class DonacionActivity extends Activity {
 
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
 
+        scorer = new DonationScorer(this);
+
         mostrarPaso1();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        analisisId++;
+        if (scorer != null) {
+            scorer.close();
+        }
     }
 
     // CAMBIAR PASO
@@ -300,7 +343,7 @@ public class DonacionActivity extends Activity {
             imagenes[i] = vista.findViewById(idsImagenes[i]);
 
             if (fotos[i] != null) {
-                imagenes[i].setImageURI(fotos[i]);
+                mostrarMiniatura(imagenes[i], fotos[i]);
             }
 
             vista.findViewById(idsBotones[i])
@@ -329,14 +372,39 @@ public class DonacionActivity extends Activity {
                 });
     }
 
+    // Pregunta si quiere usar la CAMARA (dentro de la app) o la GALERIA
     private void seleccionarFoto(int indice) {
+
+        String[] opciones = {"Tomar foto con la cámara", "Elegir de la galería"};
+
+        new AlertDialog.Builder(this)
+                .setTitle(NOMBRES_FOTO[indice])
+                .setItems(opciones, (dialogo, cual) -> {
+                    if (cual == 0) {
+                        abrirCamara(indice);
+                    } else {
+                        abrirGaleria(indice);
+                    }
+                })
+                .show();
+    }
+
+    private void abrirCamara(int indice) {
+
+        Intent intent = new Intent(this, ScannerActivity.class);
+        intent.putExtra(ScannerActivity.EXTRA_TITULO, NOMBRES_FOTO[indice]);
+
+        startActivityForResult(intent, REQ_CAMARA + indice);
+    }
+
+    private void abrirGaleria(int indice) {
 
         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
 
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         intent.setType("image/*");
 
-        startActivityForResult(intent, indice + 100);
+        startActivityForResult(intent, REQ_GALERIA + indice);
     }
 
     @Override
@@ -345,12 +413,28 @@ public class DonacionActivity extends Activity {
 
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (resultCode == RESULT_OK
-                && data != null
-                && requestCode >= 100
-                && requestCode <= 103) {
+        if (resultCode != RESULT_OK || data == null) return;
 
-            int indice = requestCode - 100;
+        // FOTO TOMADA CON LA CAMARA DE LA APP
+        if (requestCode >= REQ_CAMARA && requestCode <= REQ_CAMARA + 3) {
+
+            int indice = requestCode - REQ_CAMARA;
+            String ruta = data.getStringExtra(ScannerActivity.EXTRA_RUTA_FOTO);
+
+            if (ruta != null) {
+                fotos[indice] = Uri.fromFile(new File(ruta));
+
+                if (pasoActual == 2 && imagenes[indice] != null) {
+                    mostrarMiniatura(imagenes[indice], fotos[indice]);
+                }
+            }
+            return;
+        }
+
+        // FOTO ELEGIDA DE LA GALERIA
+        if (requestCode >= REQ_GALERIA && requestCode <= REQ_GALERIA + 3) {
+
+            int indice = requestCode - REQ_GALERIA;
 
             Uri uri = data.getData();
 
@@ -370,10 +454,17 @@ public class DonacionActivity extends Activity {
                 fotos[indice] = uri;
 
                 if (pasoActual == 2 && imagenes[indice] != null) {
-                    imagenes[indice].setImageURI(uri);
+                    mostrarMiniatura(imagenes[indice], uri);
                 }
             }
         }
+    }
+
+    // Muestra la foto en el recuadro (quita el padding/tinte del icono de camara)
+    private void mostrarMiniatura(ImageView imageView, Uri uri) {
+        imageView.setPadding(0, 0, 0, 0);
+        imageView.setImageTintList(null);
+        imageView.setImageURI(uri);
     }
 
     // PASO 3: ANALISIS DE IMAGENES
@@ -424,7 +515,10 @@ public class DonacionActivity extends Activity {
         btnContinuar3.setEnabled(false);
 
         vista.findViewById(R.id.btnRetornar)
-                .setOnClickListener(v -> mostrarPaso2());
+                .setOnClickListener(v -> {
+                    analisisId++;   // cancela el analisis en curso
+                    mostrarPaso2();
+                });
 
         btnContinuar3.setOnClickListener(v -> {
 
@@ -438,92 +532,203 @@ public class DonacionActivity extends Activity {
         });
     }
 
-    // ANALISIS PROVISIONAL
+    // ANALISIS REAL CON LA RED NEURONAL
     private void analizarImagenes() {
 
-        analisisAceptado = true;
+        analisisAceptado = false;
+        ultimoResultado = null;
 
-        txtEstadoAnalisis.setText(
-                "Evaluación de inteligencia artificial completada."
-        );
+        final int idActual = ++analisisId;
+
+        btnContinuar3.setEnabled(false);
+        progresoAnalisis.setProgress(15);
+        txtEstadoAnalisis.setText("Analizando fotografías con la red neuronal...");
+
+        final Uri[] copiaFotos = fotos.clone();
+        final String categoriaDeclarada = categoria;
+        final String condicionDeclarada = condicion;
+
+        // 1) Cargar las fotos en un hilo aparte
+        new Thread(() -> {
+
+            final List<Bitmap> bitmaps = new ArrayList<>();
+
+            try {
+                for (Uri uri : copiaFotos) {
+                    if (uri != null) {
+                        bitmaps.add(ImagenUtil.cargarBitmap(DonacionActivity.this, uri, 960));
+                    }
+                }
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    if (idActual != analisisId || isFinishing()) return;
+                    mostrarErrorAnalisis(
+                            "No se pudieron leer las fotografías. Vuelve a seleccionarlas.");
+                });
+                return;
+            }
+
+            // 2) Pasarlas por la red neuronal
+            runOnUiThread(() -> {
+                if (idActual != analisisId || isFinishing()) return;
+
+                progresoAnalisis.setProgress(45);
+
+                scorer.evaluate(bitmaps, categoriaDeclarada, condicionDeclarada, resultado -> {
+                    if (idActual != analisisId || isFinishing()) return;
+                    mostrarResultado(resultado);
+                });
+            });
+
+        }).start();
+    }
+
+    private void mostrarErrorAnalisis(String mensaje) {
+
+        analisisAceptado = false;
+        progresoAnalisis.setProgress(0);
+        txtEstadoAnalisis.setText("No se pudo completar el análisis.");
+        txtResultado.setText("Error en el análisis");
+        txtResultado.setTextColor(Color.parseColor("#C53030"));
+        txtMensajeResultado.setText(mensaje);
+        btnContinuar3.setEnabled(false);
+    }
+
+    private String formatoPuntaje(float valor) {
+        return String.format(Locale.getDefault(), "%.1f", valor);
+    }
+
+    private void mostrarResultado(ScoreResult r) {
+
+        ultimoResultado = r;
 
         progresoAnalisis.setProgress(100);
 
-        barraCalidad.setMax(10);
-        barraEstadoObjeto.setMax(10);
+        txtEstadoAnalisis.setText(String.format(Locale.getDefault(),
+                "Evaluación completada · %s · %d ms", r.motor, r.tiempoMs));
 
-        barraCalidad.setProgress(9);
-        barraEstadoObjeto.setProgress(8);
+        barraCalidad.setMax(100);
+        barraEstadoObjeto.setMax(100);
 
-        txtCalidad.setText("9/10");
-        txtEstadoObjeto.setText("8/10");
+        barraCalidad.setProgress(Math.round(r.calidadFotos * 10f));
+        barraEstadoObjeto.setProgress(Math.round(r.puntuacionObjeto * 10f));
 
-        txtDetalleCalidad.setText(
-                "Excelente nitidez e iluminación en las fotografías."
-        );
+        txtCalidad.setText(formatoPuntaje(r.calidadFotos) + "/10");
+        txtEstadoObjeto.setText(formatoPuntaje(r.puntuacionObjeto) + "/10");
 
-        txtDetalleObjeto.setText(
-                "Objeto en muy buen estado general y apto para donación."
-        );
+        txtDetalleCalidad.setText(r.detalleCalidad);
+        txtDetalleObjeto.setText(r.detalleObjeto);
 
-        txtResultado.setText("¡Aprobado para donación!");
+        String puntajeFinal = formatoPuntaje(r.puntuacionFinal) + "/10";
 
-        txtMensajeResultado.setText(
-                "Tu producto cumple con las condiciones requeridas."
-        );
+        if (r.nivel == 2) {
 
-        btnContinuar3.setEnabled(true);
+            txtResultado.setText("¡Aprobado para donación!");
+            txtResultado.setTextColor(Color.parseColor("#287A5A"));
+            txtMensajeResultado.setText(
+                    "Puntuación final: " + puntajeFinal
+                            + ". Tu producto cumple con las condiciones requeridas.");
+
+        } else if (r.nivel == 1) {
+
+            txtResultado.setText("Aprobado con observaciones");
+            txtResultado.setTextColor(Color.parseColor("#B45309"));
+            txtMensajeResultado.setText(
+                    "Puntuación final: " + puntajeFinal
+                            + ". La fundación revisará tu donación antes de aceptarla.");
+
+        } else {
+
+            txtResultado.setText("No aprobado");
+            txtResultado.setTextColor(Color.parseColor("#C53030"));
+            txtMensajeResultado.setText(
+                    "Puntuación final: " + puntajeFinal
+                            + ". Mejora las fotografías (buena luz, objeto centrado) o revisa "
+                            + "la categoría elegida y vuelve a intentarlo.");
+        }
+
+        analisisAceptado = r.nivel >= 1;
+        btnContinuar3.setEnabled(analisisAceptado);
 
         btnContinuar3.setOnClickListener(v -> {
-
             if (!analisisAceptado) return;
-
-            // Crear fecha de registro
-            String fecha = new java.text.SimpleDateFormat(
-                    "dd/MM/yyyy HH:mm",
-                    java.util.Locale.getDefault()
-            ).format(new java.util.Date());
-
-            // Registrar donación
-            String userId = com.prdev.solidaryhands.network.SessionManager.getInstance(DonacionActivity.this).getUserId();
-            Donacion nuevaDonacion = new Donacion(
-                    userId,
-                    tipo,
-                    categoria,
-                    descripcion,
-                    cantidad,
-                    unidad,
-                    condicion,
-                    entrega,
-                    fundacion,
-                    fecha,
-                    "Pendiente de revision"
-            );
-            DonacionesRepositorio.agregar(nuevaDonacion);
-            if (userId != null && !userId.isEmpty()) {
-                com.prdev.solidaryhands.network.SupabaseClient.getInstance(DonacionActivity.this)
-                        .getDbService().insertDonation("return=minimal", nuevaDonacion)
-                        .enqueue(new retrofit2.Callback<Void>() {
-                            @Override
-                            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {}
-                            @Override
-                            public void onFailure(retrofit2.Call<Void> call, Throwable t) {}
-                        });
-            }
-
-            Toast.makeText(this,
-                    "Donación registrada correctamente.",
-                    Toast.LENGTH_LONG).show();
-
-            // Abrir historial
-            Intent intent = new Intent(
-                    DonacionActivity.this,
-                    HistorialActivity.class
-            );
-
-            startActivity(intent);
-            finish();
+            registrarDonacion();
         });
+    }
 
+    private void registrarDonacion() {
+
+        // Crear fecha de registro
+        String fecha = new SimpleDateFormat(
+                "dd/MM/yyyy HH:mm",
+                Locale.getDefault()
+        ).format(new Date());
+
+        // La puntuación de la IA se guarda junto a la descripción
+        String descripcionFinal = descripcion;
+        if (ultimoResultado != null) {
+            descripcionFinal += "\n[Puntuación IA: "
+                    + formatoPuntaje(ultimoResultado.puntuacionFinal) + "/10";
+            if (!ultimoResultado.objetoDetectado.isEmpty()) {
+                descripcionFinal += " · Detectado: " + ultimoResultado.objetoDetectado;
+            }
+            descripcionFinal += "]";
+        }
+
+        String userId = SessionManager
+                .getInstance(DonacionActivity.this).getUserId();
+
+        Donacion nuevaDonacion = new Donacion(
+                userId,
+                tipo,
+                categoria,
+                descripcionFinal,
+                cantidad,
+                unidad,
+                condicion,
+                entrega,
+                fundacion,
+                fecha,
+                "Pendiente de revisión"
+        );
+        DonacionesRepositorio.agregar(nuevaDonacion);
+
+        final Context appContext = getApplicationContext();
+
+        if (userId != null && !userId.isEmpty() && !"demo_user".equals(userId)) {
+            SupabaseClient.getInstance(DonacionActivity.this)
+                    .getDbService().insertDonation("return=minimal", nuevaDonacion)
+                    .enqueue(new Callback<Void>() {
+                        @Override
+                        public void onResponse(Call<Void> call, Response<Void> response) {
+                            if (!response.isSuccessful()) {
+                                Toast.makeText(appContext,
+                                        "La donación no se pudo guardar en la nube (código "
+                                                + response.code() + ").",
+                                        Toast.LENGTH_LONG).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<Void> call, Throwable t) {
+                            Toast.makeText(appContext,
+                                    "Sin conexión: la donación quedó solo en este teléfono.",
+                                    Toast.LENGTH_LONG).show();
+                        }
+                    });
+        }
+
+        Toast.makeText(this,
+                "Donación registrada correctamente.",
+                Toast.LENGTH_LONG).show();
+
+        // Abrir historial
+        Intent intent = new Intent(
+                DonacionActivity.this,
+                HistorialActivity.class
+        );
+
+        startActivity(intent);
+        finish();
     }
 }
