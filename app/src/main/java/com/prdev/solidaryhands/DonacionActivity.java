@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.*;
 
+@SuppressWarnings({"unchecked", "deprecation"})
 public class DonacionActivity extends Activity {
 
     // CONTENEDOR PRINCIPAL
@@ -484,7 +485,9 @@ public class DonacionActivity extends Activity {
             ).format(new java.util.Date());
 
             // Registrar donación
+            String userId = com.prdev.solidaryhands.network.SessionManager.getInstance(DonacionActivity.this).getUserId();
             Donacion nuevaDonacion = new Donacion(
+                    userId,
                     tipo,
                     categoria,
                     descripcion,
@@ -494,10 +497,19 @@ public class DonacionActivity extends Activity {
                     entrega,
                     fundacion,
                     fecha,
-                    "Pendiente de revisión"
+                    "Pendiente de revision"
             );
-
             DonacionesRepositorio.agregar(nuevaDonacion);
+            if (userId != null && !userId.isEmpty()) {
+                com.prdev.solidaryhands.network.SupabaseClient.getInstance(DonacionActivity.this)
+                        .getDbService().insertDonation("return=minimal", nuevaDonacion)
+                        .enqueue(new retrofit2.Callback<Void>() {
+                            @Override
+                            public void onResponse(retrofit2.Call<Void> call, retrofit2.Response<Void> response) {}
+                            @Override
+                            public void onFailure(retrofit2.Call<Void> call, Throwable t) {}
+                        });
+            }
 
             Toast.makeText(this,
                     "Donación registrada correctamente.",

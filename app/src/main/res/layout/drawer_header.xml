@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="180dp"
+    android:background="#287A5A"
+    android:orientation="vertical"
+    android:gravity="bottom"
+    android:padding="20dp">
+
+    <ImageView
+        android:id="@+id/imgDrawerAvatar"
+        android:layout_width="65dp"
+        android:layout_height="65dp"
+        android:background="@drawable/bg_avatar"
+        android:backgroundTint="#FFFFFF"
+        android:padding="14dp"
+        android:src="@drawable/ic_perfil"
+        android:contentDescription="Avatar del usuario"/>
+
+    <TextView
+        android:id="@+id/txtDrawerNombre"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="Usuario Solidaryhands"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"/>
+
+    <TextView
+        android:id="@+id/txtDrawerEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="correo@ejemplo.com"
+        android:textColor="#DCEFE4"
+        android:textSize="13sp"/>
+
+</LinearLayout>

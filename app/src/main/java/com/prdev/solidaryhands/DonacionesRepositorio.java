@@ -1,12 +1,12 @@
 package com.prdev.solidaryhands;
 
+import com.prdev.solidaryhands.models.Donacion;
 import java.util.ArrayList;
 import java.util.List;
 
 public class DonacionesRepositorio {
 
-    private static final List<Donacion> donaciones =
-            new ArrayList<>();
+    private static final List<Donacion> donaciones = new ArrayList<>();
 
     public static void agregar(Donacion donacion) {
         donaciones.add(0, donacion);

@@ -1,22 +1,37 @@
 package com.prdev.solidaryhands;
 
-import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class RegistroActivity extends Activity {
+import androidx.appcompat.app.AppCompatActivity;
 
-    EditText edtNombre;
-    EditText edtApPaterno;
-    EditText edtApMaterno;
-    EditText edtTelefono;
-    EditText edtCorreo;
-    EditText edtRegistroContrasena;
+import com.prdev.solidaryhands.models.AuthResponse;
+import com.prdev.solidaryhands.models.Perfil;
+import com.prdev.solidaryhands.models.SignUpRequest;
+import com.prdev.solidaryhands.models.User;
+import com.prdev.solidaryhands.network.SessionManager;
+import com.prdev.solidaryhands.network.SupabaseClient;
 
-    Button btnRegistrar;
+import java.util.HashMap;
+import java.util.Map;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class RegistroActivity extends AppCompatActivity {
+
+    private EditText edtNombre;
+    private EditText edtApPaterno;
+    private EditText edtApMaterno;
+    private EditText edtTelefono;
+    private EditText edtCorreo;
+    private EditText edtRegistroContrasena;
+    private Button btnRegistrar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,87 +44,175 @@ public class RegistroActivity extends Activity {
         edtApMaterno = findViewById(R.id.edtApMaterno);
         edtTelefono = findViewById(R.id.edtTelefono);
         edtCorreo = findViewById(R.id.edtCorreo);
-        edtRegistroContrasena =
-                findViewById(R.id.edtRegistroContrasena);
-
+        edtRegistroContrasena = findViewById(R.id.edtRegistroContrasena);
         btnRegistrar = findViewById(R.id.btnRegistrar);
 
         // BOTON REGISTRAR
-        btnRegistrar.setOnClickListener(v -> {
+        btnRegistrar.setOnClickListener(v -> registrarUsuarioSupabase());
+    }
 
-            String nombre = edtNombre.getText().toString().trim();
-            String paterno = edtApPaterno.getText().toString().trim();
-            String materno = edtApMaterno.getText().toString().trim();
-            String telefono = edtTelefono.getText().toString().trim();
-            String correo = edtCorreo.getText().toString().trim();
-            String contrasena =
-                    edtRegistroContrasena.getText().toString();
+    private void registrarUsuarioSupabase() {
+        String nombre = edtNombre.getText().toString().trim();
+        String paterno = edtApPaterno.getText().toString().trim();
+        String materno = edtApMaterno.getText().toString().trim();
+        String telefono = edtTelefono.getText().toString().trim();
+        String correo = edtCorreo.getText().toString().trim();
+        String contrasena = edtRegistroContrasena.getText().toString();
 
-            // VALIDAR NOMBRE
-            if (nombre.isEmpty()) {
-                edtNombre.setError("Ingresa tu nombre");
-                edtNombre.requestFocus();
-                return;
-            }
+        // VALIDACIONES
+        if (nombre.isEmpty()) {
+            edtNombre.setError("Ingresa tu nombre");
+            edtNombre.requestFocus();
+            return;
+        }
 
-            // VALIDAR APELLIDO PATERNO
-            if (paterno.isEmpty()) {
-                edtApPaterno.setError("Ingresa tu apellido paterno");
-                edtApPaterno.requestFocus();
-                return;
-            }
+        if (paterno.isEmpty()) {
+            edtApPaterno.setError("Ingresa tu apellido paterno");
+            edtApPaterno.requestFocus();
+            return;
+        }
 
-            // VALIDAR APELLIDO MATERNO
-            if (materno.isEmpty()) {
-                edtApMaterno.setError("Ingresa tu apellido materno");
-                edtApMaterno.requestFocus();
-                return;
-            }
+        if (materno.isEmpty()) {
+            edtApMaterno.setError("Ingresa tu apellido materno");
+            edtApMaterno.requestFocus();
+            return;
+        }
 
-            // VALIDAR TELEFONO
-            if (telefono.isEmpty()) {
-                edtTelefono.setError("Ingresa tu teléfono");
-                edtTelefono.requestFocus();
-                return;
-            }
+        if (telefono.isEmpty()) {
+            edtTelefono.setError("Ingresa tu teléfono");
+            edtTelefono.requestFocus();
+            return;
+        }
 
-            // VALIDAR CORREO
-            if (correo.isEmpty()) {
-                edtCorreo.setError("Ingresa tu correo");
-                edtCorreo.requestFocus();
-                return;
-            }
+        if (correo.isEmpty()) {
+            edtCorreo.setError("Ingresa tu correo");
+            edtCorreo.requestFocus();
+            return;
+        }
 
-            if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
-                edtCorreo.setError("Ingresa un correo válido");
-                edtCorreo.requestFocus();
-                return;
-            }
+        if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
+            edtCorreo.setError("Ingresa un correo válido");
+            edtCorreo.requestFocus();
+            return;
+        }
 
-            // VALIDAR CONTRASEÑA
-            if (contrasena.isEmpty()) {
-                edtRegistroContrasena.setError(
-                        "Ingresa una contraseña");
-                edtRegistroContrasena.requestFocus();
-                return;
-            }
+        if (contrasena.isEmpty()) {
+            edtRegistroContrasena.setError("Ingresa una contraseña");
+            edtRegistroContrasena.requestFocus();
+            return;
+        }
 
-            if (contrasena.length() < 8) {
-                edtRegistroContrasena.setError(
-                        "Debe tener al menos 8 caracteres");
-                edtRegistroContrasena.requestFocus();
-                return;
-            }
+        if (contrasena.length() < 6) {
+            edtRegistroContrasena.setError("Debe tener al menos 6 caracteres");
+            edtRegistroContrasena.requestFocus();
+            return;
+        }
 
-            // REGISTRO VALIDADO
-            Toast.makeText(
-                    RegistroActivity.this,
-                    "¡Datos validados correctamente!",
-                    Toast.LENGTH_LONG
-            ).show();
+        String nombreCompleto = (nombre + " " + paterno + " " + materno).trim();
 
-            // AQUI CONECTAREMOS LA BASE DE DATOS
+        // Si la URL de Supabase es la plantilla predeterminada, registrar en modo local de demostración
+        if (com.prdev.solidaryhands.network.SupabaseConfig.SUPABASE_URL.contains("TU_PROYECTO")) {
+            Toast.makeText(RegistroActivity.this, "Registrando usuario...", Toast.LENGTH_SHORT).show();
+            SessionManager.getInstance(RegistroActivity.this)
+                    .saveSession("token_demo", "demo_user", correo, nombreCompleto, telefono);
 
-        });
+            Intent intent = new Intent(RegistroActivity.this, HomeActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
+        // DESHABILITAR BOTÓN MIENTRAS SE PROCESA
+        btnRegistrar.setEnabled(false);
+        btnRegistrar.setText("Registrando en Supabase...");
+
+        // METADATA DEL USUARIO PARA VINCULAR CON PROFILES
+        Map<String, Object> metadata = new HashMap<>();
+        metadata.put("nombre", nombre);
+        metadata.put("apellido_paterno", paterno);
+        metadata.put("apellido_materno", materno);
+        metadata.put("telefono", telefono);
+
+        SignUpRequest signUpRequest = new SignUpRequest(correo, contrasena, metadata);
+
+        SupabaseClient.getInstance(this).getAuthService().signUp(signUpRequest)
+                .enqueue(new Callback<AuthResponse>() {
+                    @Override
+                    public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
+                        btnRegistrar.setEnabled(true);
+                        btnRegistrar.setText("Registrar");
+
+                        if (response.isSuccessful() && response.body() != null) {
+                            AuthResponse authResp = response.body();
+                            User user = authResp.getUser();
+                            String userId = user != null ? user.getId() : null;
+                            String token = authResp.getAccessToken();
+
+                            String nombreCompleto = (nombre + " " + paterno + " " + materno).trim();
+
+                            // Si la confirmación de correo está desactivada y devuelve token, iniciamos sesión
+                            if (token != null && !token.isEmpty() && userId != null) {
+                                SessionManager.getInstance(RegistroActivity.this)
+                                        .saveSession(token, userId, correo, nombreCompleto, telefono);
+
+                                // Respaldo: asegurar perfil en la tabla profiles
+                                asegurarPerfilEnBaseDeDatos(userId, correo, nombre, paterno, materno, telefono);
+
+                                Toast.makeText(RegistroActivity.this, "¡Registro exitoso! Bienvenido.", Toast.LENGTH_SHORT).show();
+
+                                Intent intent = new Intent(RegistroActivity.this, HomeActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                                finish();
+                            } else {
+                                Toast.makeText(RegistroActivity.this,
+                                        "¡Cuenta creada exitosamente! Inicia sesión con tus credenciales.",
+                                        Toast.LENGTH_LONG).show();
+                                finish();
+                            }
+                        } else {
+                            String errorMsg = "Error en el registro. ";
+                            if (response.code() == 400 || response.code() == 422) {
+                                errorMsg += "El correo ya podría estar registrado o los datos no son válidos.";
+                            }
+                            Toast.makeText(RegistroActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<AuthResponse> call, Throwable t) {
+                        btnRegistrar.setEnabled(true);
+                        btnRegistrar.setText("Registrar");
+
+                        if (com.prdev.solidaryhands.network.SupabaseConfig.SUPABASE_URL.contains("TU_PROYECTO")
+                                || t instanceof java.net.UnknownHostException) {
+                            Toast.makeText(RegistroActivity.this, "Registrando usuario en modo local...", Toast.LENGTH_SHORT).show();
+                            String nombreCompleto = (nombre + " " + paterno + " " + materno).trim();
+                            SessionManager.getInstance(RegistroActivity.this)
+                                    .saveSession("token_demo", "demo_user", correo, nombreCompleto, telefono);
+
+                            Intent intent = new Intent(RegistroActivity.this, HomeActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                            startActivity(intent);
+                            finish();
+                        } else {
+                            Toast.makeText(RegistroActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    }
+                });
+    }
+
+    private void asegurarPerfilEnBaseDeDatos(String userId, String email, String nombre, String pat, String mat, String tel) {
+        Perfil perfil = new Perfil(userId, email, nombre, pat, mat, tel);
+        SupabaseClient.getInstance(this).getDbService()
+                .upsertProfile("resolution=merge-duplicates", perfil)
+                .enqueue(new Callback<Void>() {
+                    @Override
+                    public void onResponse(Call<Void> call, Response<Void> response) {}
+
+                    @Override
+                    public void onFailure(Call<Void> call, Throwable t) {}
+                });
     }
 }

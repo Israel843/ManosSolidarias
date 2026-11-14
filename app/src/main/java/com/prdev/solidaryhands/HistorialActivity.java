@@ -1,36 +1,46 @@
 package com.prdev.solidaryhands;
 
-import android.app.Activity;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
-import android.widget.*;
+import android.widget.LinearLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.prdev.solidaryhands.models.Donacion;
+import com.prdev.solidaryhands.network.SessionManager;
+import com.prdev.solidaryhands.network.SupabaseClient;
+
+import java.util.ArrayList;
 import java.util.List;
 
-public class HistorialActivity extends Activity {
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class HistorialActivity extends AppCompatActivity {
 
     private LinearLayout contenedorDonaciones;
     private LinearLayout contenedorVacio;
     private TextView txtTotalDonaciones;
+    private SessionManager sessionManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_historial);
 
-        contenedorDonaciones =
-                findViewById(R.id.contenedorDonaciones);
+        sessionManager = SessionManager.getInstance(this);
 
-        contenedorVacio =
-                findViewById(R.id.contenedorVacio);
+        contenedorDonaciones = findViewById(R.id.contenedorDonaciones);
+        contenedorVacio = findViewById(R.id.contenedorVacio);
+        txtTotalDonaciones = findViewById(R.id.txtTotalDonaciones);
 
-        txtTotalDonaciones =
-                findViewById(R.id.txtTotalDonaciones);
-
-        findViewById(R.id.btnVolverHistorial)
-                .setOnClickListener(v -> finish());
+        findViewById(R.id.btnVolverHistorial).setOnClickListener(v -> finish());
 
         cargarDonaciones();
     }
@@ -38,26 +48,66 @@ public class HistorialActivity extends Activity {
     @Override
     protected void onResume() {
         super.onResume();
-
         if (contenedorDonaciones != null) {
             cargarDonaciones();
         }
     }
 
     private void cargarDonaciones() {
+        String userId = sessionManager.getUserId();
 
+        // Si no hay usuario logueado o estamos en modo local de demostración
+        if (userId == null || userId.isEmpty() || com.prdev.solidaryhands.network.SupabaseConfig.SUPABASE_URL.contains("TU_PROYECTO")) {
+            mostrarLista(DonacionesRepositorio.obtenerTodas());
+            return;
+        }
+
+        // Consultar desde Supabase
+        SupabaseClient.getInstance(this).getDbService().getDonations("eq." + userId)
+                .enqueue(new Callback<List<Donacion>>() {
+                    @Override
+                    public void onResponse(Call<List<Donacion>> call, Response<List<Donacion>> response) {
+                        if (response.isSuccessful() && response.body() != null) {
+                            List<Donacion> listaSupabase = response.body();
+                            // También sumamos donaciones locales si las hubiera
+                            List<Donacion> listaFinal = new ArrayList<>(listaSupabase);
+                            for (Donacion d : DonacionesRepositorio.obtenerTodas()) {
+                                if (!contieneDonacion(listaFinal, d)) {
+                                    listaFinal.add(0, d);
+                                }
+                            }
+                            mostrarLista(listaFinal);
+                        } else {
+                            mostrarLista(DonacionesRepositorio.obtenerTodas());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Donacion>> call, Throwable t) {
+                        // En caso de fallo de red, mostrar datos locales
+                        mostrarLista(DonacionesRepositorio.obtenerTodas());
+                    }
+                });
+    }
+
+    private boolean contieneDonacion(List<Donacion> lista, Donacion objetivo) {
+        for (Donacion d : lista) {
+            if (d.getFecha().equals(objetivo.getFecha())
+                    && d.getTipo().equals(objetivo.getTipo())
+                    && d.getFundacion().equals(objetivo.getFundacion())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void mostrarLista(List<Donacion> lista) {
         contenedorDonaciones.removeAllViews();
 
-        List<Donacion> lista =
-                DonacionesRepositorio.obtenerTodas();
+        int total = lista != null ? lista.size() : 0;
+        txtTotalDonaciones.setText(total + (total == 1 ? " donación" : " donaciones"));
 
-        txtTotalDonaciones.setText(
-                lista.size() + (lista.size() == 1
-                        ? " donación"
-                        : " donaciones")
-        );
-
-        if (lista.isEmpty()) {
+        if (lista == null || lista.isEmpty()) {
             contenedorVacio.setVisibility(View.VISIBLE);
             return;
         }
@@ -65,36 +115,27 @@ public class HistorialActivity extends Activity {
         contenedorVacio.setVisibility(View.GONE);
 
         for (int i = 0; i < lista.size(); i++) {
-
             Donacion donacion = lista.get(i);
-
             crearTarjeta(donacion, i + 1);
         }
     }
 
     private void crearTarjeta(Donacion d, int numero) {
-
         LinearLayout tarjeta = new LinearLayout(this);
-
         tarjeta.setOrientation(LinearLayout.VERTICAL);
         tarjeta.setPadding(dp(16), dp(16), dp(16), dp(16));
-
         tarjeta.setBackgroundResource(R.drawable.bg_card);
 
-        LinearLayout.LayoutParams parametros =
-                new LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        LinearLayout.LayoutParams.WRAP_CONTENT
-                );
-
+        LinearLayout.LayoutParams parametros = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
         parametros.setMargins(0, 0, 0, dp(15));
-
         tarjeta.setLayoutParams(parametros);
         tarjeta.setElevation(dp(2));
 
-        // NUMERO Y ESTADO
+        // NÚMERO Y ESTADO
         LinearLayout encabezado = new LinearLayout(this);
-
         encabezado.setOrientation(LinearLayout.HORIZONTAL);
         encabezado.setGravity(Gravity.CENTER_VERTICAL);
 
@@ -104,13 +145,7 @@ public class HistorialActivity extends Activity {
                 "#287A5A",
                 true
         );
-
-        encabezado.addView(titulo,
-                new LinearLayout.LayoutParams(
-                        0,
-                        -2,
-                        1
-                ));
+        encabezado.addView(titulo, new LinearLayout.LayoutParams(0, -2, 1));
 
         TextView estado = crearTexto(
                 d.getEstado(),
@@ -118,96 +153,47 @@ public class HistorialActivity extends Activity {
                 "#B7791F",
                 true
         );
-
         encabezado.addView(estado);
-
         tarjeta.addView(encabezado);
 
-        // INFORMACION DEL OBJETO
-        agregarTexto(tarjeta,
-                "Objeto: " + d.getTipo(), 16, "#263C50", true);
+        // INFORMACIÓN DEL OBJETO
+        agregarTexto(tarjeta, "Objeto: " + d.getTipo(), 16, "#263C50", true);
+        agregarTexto(tarjeta, "Categoría: " + d.getCategoria(), 14, "#52645A", false);
+        agregarTexto(tarjeta, "Descripción: " + d.getDescripcion(), 14, "#52645A", false);
+        agregarTexto(tarjeta, "Cantidad: " + d.getCantidad() + " " + d.getUnidad(), 14, "#52645A", false);
+        agregarTexto(tarjeta, "Condición: " + d.getCondicion(), 14, "#52645A", false);
 
-        agregarTexto(tarjeta,
-                "Categoría: " + d.getCategoria(), 14, "#52645A", false);
-
-        agregarTexto(tarjeta,
-                "Descripción: " + d.getDescripcion(), 14, "#52645A", false);
-
-        agregarTexto(tarjeta,
-                "Cantidad: " + d.getCantidad() + " " + d.getUnidad(),
-                14, "#52645A", false);
-
-        agregarTexto(tarjeta,
-                "Condición: " + d.getCondicion(),
-                14, "#52645A", false);
-
-        // FUNDACION
-        agregarTexto(tarjeta,
-                "Fundación destinataria",
-                15, "#263C50", true);
-
-        agregarTexto(tarjeta,
-                d.getFundacion(),
-                17, "#287A5A", true);
+        // FUNDACIÓN DESTINATARIA
+        agregarTexto(tarjeta, "Fundación destinataria", 15, "#263C50", true);
+        agregarTexto(tarjeta, d.getFundacion(), 17, "#287A5A", true);
 
         // ENTREGA Y FECHA
-        agregarTexto(tarjeta,
-                "Entrega: " + d.getEntrega(),
-                13, "#718096", false);
-
-        agregarTexto(tarjeta,
-                "Fecha: " + d.getFecha(),
-                13, "#718096", false);
+        agregarTexto(tarjeta, "Entrega: " + d.getEntrega(), 13, "#718096", false);
+        agregarTexto(tarjeta, "Fecha: " + d.getFecha(), 13, "#718096", false);
 
         contenedorDonaciones.addView(tarjeta);
     }
 
-    private void agregarTexto(
-            LinearLayout contenedor,
-            String contenido,
-            int tamano,
-            String color,
-            boolean negrita) {
-
-        TextView texto = crearTexto(
-                contenido, tamano, color, negrita
-        );
-
-        LinearLayout.LayoutParams params =
-                new LinearLayout.LayoutParams(
-                        -1, -2
-                );
-
+    private void agregarTexto(LinearLayout contenedor, String contenido, int tamano, String color, boolean negrita) {
+        TextView texto = crearTexto(contenido, tamano, color, negrita);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(-1, -2);
         params.topMargin = dp(9);
-
         texto.setLayoutParams(params);
-
         contenedor.addView(texto);
     }
 
-    private TextView crearTexto(
-            String contenido,
-            int tamano,
-            String color,
-            boolean negrita) {
-
+    private TextView crearTexto(String contenido, int tamano, String color, boolean negrita) {
         TextView texto = new TextView(this);
-
         texto.setText(contenido);
         texto.setTextSize(tamano);
-        texto.setTextColor(android.graphics.Color.parseColor(color));
-
+        texto.setTextColor(Color.parseColor(color));
         if (negrita) {
-            texto.setTypeface(null,
-                    android.graphics.Typeface.BOLD);
+            texto.setTypeface(null, Typeface.BOLD);
         }
-
         return texto;
     }
 
     private int dp(int valor) {
-        return (int) (valor *
-                getResources().getDisplayMetrics().density);
+        return (int) (valor * getResources().getDisplayMetrics().density);
     }
 }
-

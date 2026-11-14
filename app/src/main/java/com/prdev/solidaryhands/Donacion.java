@@ -1,79 +1,20 @@
 package com.prdev.solidaryhands;
 
-public class Donacion {
+public class Donacion extends com.prdev.solidaryhands.models.Donacion {
 
-    private String tipo;
-    private String categoria;
-    private String descripcion;
-    private String cantidad;
-    private String unidad;
-    private String condicion;
-    private String entrega;
-    private String fundacion;
-    private String fecha;
-    private String estado;
-
-    public Donacion(
-            String tipo,
-            String categoria,
-            String descripcion,
-            String cantidad,
-            String unidad,
-            String condicion,
-            String entrega,
-            String fundacion,
-            String fecha,
-            String estado) {
-
-        this.tipo = tipo;
-        this.categoria = categoria;
-        this.descripcion = descripcion;
-        this.cantidad = cantidad;
-        this.unidad = unidad;
-        this.condicion = condicion;
-        this.entrega = entrega;
-        this.fundacion = fundacion;
-        this.fecha = fecha;
-        this.estado = estado;
+    public Donacion() {
+        super();
     }
 
-    public String getTipo() {
-        return tipo;
+    public Donacion(String tipo, String categoria, String descripcion, String cantidad,
+                    String unidad, String condicion, String entrega, String fundacion,
+                    String fecha, String estado) {
+        super(tipo, categoria, descripcion, cantidad, unidad, condicion, entrega, fundacion, fecha, estado);
     }
 
-    public String getCategoria() {
-        return categoria;
-    }
-
-    public String getDescripcion() {
-        return descripcion;
-    }
-
-    public String getCantidad() {
-        return cantidad;
-    }
-
-    public String getUnidad() {
-        return unidad;
-    }
-
-    public String getCondicion() {
-        return condicion;
-    }
-
-    public String getEntrega() {
-        return entrega;
-    }
-
-    public String getFundacion() {
-        return fundacion;
-    }
-
-    public String getFecha() {
-        return fecha;
-    }
-
-    public String getEstado() {
-        return estado;
+    public Donacion(String userId, String tipo, String categoria, String descripcion,
+                    String cantidad, String unidad, String condicion, String entrega,
+                    String fundacion, String fecha, String estado) {
+        super(userId, tipo, categoria, descripcion, cantidad, unidad, condicion, entrega, fundacion, fecha, estado);
     }
 }
