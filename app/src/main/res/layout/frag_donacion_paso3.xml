@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Análisis de imágenes con IA"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            android:textColor="#287A5A"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Estamos evaluando las fotografías de tu donación."
+            android:textSize="14sp"
+            android:textColor="#718096"
+            android:layout_marginTop="6dp"/>
+
+        <ProgressBar
+            android:id="@+id/progresoAnalisis"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:progress="0"
+            android:progressTint="#287A5A"
+            android:layout_marginTop="20dp"/>
+
+        <TextView
+            android:id="@+id/txtEstadoAnalisis"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Esperando análisis..."
+            android:textColor="#287A5A"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:layout_marginTop="10dp"/>
+
+
+        <!-- CALIDAD DE FOTOGRAFIA -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_card">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Calidad de fotografía"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="#263C50"/>
+
+            <TextView
+                android:id="@+id/txtCalidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pendiente"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:textColor="#287A5A"
+                android:layout_marginTop="10dp"/>
+
+            <ProgressBar
+                android:id="@+id/barraCalidad"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:max="10"
+                android:progress="0"
+                android:progressTint="#287A5A"/>
+
+            <TextView
+                android:id="@+id/txtDetalleCalidad"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Evaluación de iluminación, enfoque y nitidez."
+                android:textColor="#718096"
+                android:textSize="13sp"
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout>
+
+        <!-- ESTADO VISIBLE DEL OBJETO -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_card">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Estado visible del objeto"
+                android:textSize="17sp"
+                android:textStyle="bold"
+                android:textColor="#263C50"/>
+
+            <TextView
+                android:id="@+id/txtEstadoObjeto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Pendiente"
+                android:textSize="26sp"
+                android:textStyle="bold"
+                android:textColor="#287A5A"
+                android:layout_marginTop="10dp"/>
+
+            <ProgressBar
+                android:id="@+id/barraEstadoObjeto"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="match_parent"
+                android:layout_height="12dp"
+                android:max="10"
+                android:progress="0"
+                android:progressTint="#287A5A"/>
+
+            <TextView
+                android:id="@+id/txtDetalleObjeto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Evaluación de conservación y desgaste visible."
+                android:textColor="#718096"
+                android:textSize="13sp"
+                android:layout_marginTop="8dp"/>
+
+        </LinearLayout>
+
+        <!-- RESULTADO -->
+        <LinearLayout
+            android:id="@+id/contenedorResultado"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="18dp"
+            android:layout_marginTop="20dp"
+            android:background="@drawable/bg_card">
+
+            <TextView
+                android:id="@+id/txtResultado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Esperando evaluación"
+                android:textSize="19sp"
+                android:textStyle="bold"
+                android:textColor="#287A5A"
+                android:gravity="center"/>
+
+            <TextView
+                android:id="@+id/txtMensajeResultado"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="El resultado aparecerá después del análisis."
+                android:textSize="14sp"
+                android:textColor="#52645A"
+                android:gravity="center"
+                android:layout_marginTop="10dp"/>
+
+        </LinearLayout>
+
+        <!-- BOTONES -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="20dp">
+
+            <Button
+                android:id="@+id/btnRetornar"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_weight="1"
+                android:text="Retornar"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_input"
+                android:backgroundTint="@null"/>
+
+            <Button
+                android:id="@+id/btnContinuar3"
+                android:layout_width="0dp"
+                android:layout_height="55dp"
+                android:layout_weight="1"
+                android:layout_marginStart="10dp"
+                android:text="Continuar"
+                android:textAllCaps="false"
+                android:textColor="#FFFFFF"
+                android:background="@drawable/bg_button"
+                android:backgroundTint="@null" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

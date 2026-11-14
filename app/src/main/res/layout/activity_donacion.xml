@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F8F6">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="16dp"
+        android:background="#FFFFFF">
+
+        <ImageButton
+            android:id="@+id/btnVolver"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@android:drawable/ic_media_previous"
+            android:background="@android:color/transparent"
+            android:tint="#287A5A"
+            android:contentDescription="Volver"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Registrar donación"
+            android:textColor="#287A5A"
+            android:textSize="21sp"
+            android:textStyle="bold"
+            android:gravity="center"/>
+
+        <TextView
+            android:id="@+id/txtNumeroPaso"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="1 de 3"
+            android:textColor="#287A5A"
+            android:textStyle="bold"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="6dp"
+        android:orientation="horizontal"
+        android:background="#DCE8DF">
+
+        <View
+            android:id="@+id/progreso"
+            android:layout_width="150dp"
+            android:layout_height="match_parent"
+            android:background="#287A5A"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/contenedorPasos"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
+
+</LinearLayout>

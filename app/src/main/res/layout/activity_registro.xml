@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F5F8F6"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        android:padding="28dp">
+
+        <!-- TITULO -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Solidaryhands"
+            android:textSize="28sp"
+            android:textStyle="bold"
+            android:textColor="#287A5A"/>
+
+        <!-- ICONO -->
+        <ImageView
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_marginTop="15dp"
+            android:background="@drawable/bg_avatar"
+            android:backgroundTint="#DCEFE4"
+            android:padding="18dp"
+            android:src="@android:drawable/ic_menu_myplaces"
+            android:tint="#287A5A"
+            android:contentDescription="Icono de registro"/>
+
+        <!-- TITULO REGISTRO -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="REGISTRO"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:textColor="#287A5A"
+            android:layout_marginTop="15dp"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- NOMBRE -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Nombre"
+            android:textColor="#263C50"
+            android:textStyle="bold"
+            android:textSize="14sp"/>
+
+        <EditText
+            android:id="@+id/edtNombre"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_input"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:hint="Ingresa tu nombre"
+            android:textSize="14sp"/>
+
+        <!-- APELLIDO PATERNO -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Apellido paterno"
+            android:textColor="#263C50"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/edtApPaterno"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_input"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:hint="Ingresa tu apellido paterno"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:inputType="textCapWords"/>
+
+        <!-- APELLIDO MATERNO -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Apellido materno"
+            android:textColor="#263C50"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/edtApMaterno"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_input"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:hint="Ingresa tu apellido materno"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:inputType="textCapWords"/>
+
+        <!-- TELEFONO -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Teléfono"
+            android:textColor="#263C50"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/edtTelefono"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_input"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:hint="Ingresa tu teléfono"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:inputType="phone"
+            android:maxLength="15"/>
+
+        <!-- CORREO -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Correo electrónico"
+            android:textColor="#263C50"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/edtCorreo"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_input"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:hint="ejemplo@correo.com"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:inputType="textEmailAddress"/>
+
+        <!-- CONTRASEÑA -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Contraseña"
+            android:textColor="#263C50"
+            android:textStyle="bold"
+            android:textSize="14sp"
+            android:layout_marginTop="12dp"/>
+
+        <EditText
+            android:id="@+id/edtRegistroContrasena"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginTop="5dp"
+            android:background="@drawable/bg_input"
+            android:paddingStart="12dp"
+            android:paddingEnd="12dp"
+            android:hint="Crea una contraseña"
+            android:textSize="14sp"
+            android:singleLine="true"
+            android:inputType="textPassword"/>
+
+        <!-- BOTON REGISTRAR -->
+        <Button
+            android:id="@+id/btnRegistrar"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="20dp"
+            android:background="@drawable/bg_button"
+            android:backgroundTint="@null"
+            android:text="Registrar"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="15sp"
+            android:textAllCaps="false"/>
+
+    </LinearLayout>
+
+</ScrollView>

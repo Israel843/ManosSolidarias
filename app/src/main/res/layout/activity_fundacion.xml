@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F5F8F6">
+
+    <!-- ENCABEZADO -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:gravity="center_vertical"
+        android:paddingHorizontal="12dp"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btnVolverFundacion"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:src="@android:drawable/ic_media_previous"
+            android:background="@android:color/transparent"
+            android:tint="#287A5A"
+            android:contentDescription="Volver"/>
+
+        <TextView
+            android:id="@+id/txtNombreFundacion"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Fundación"
+            android:textSize="19sp"
+            android:textStyle="bold"
+            android:textColor="#287A5A"/>
+
+    </LinearLayout>
+
+    <!-- DESCRIPCION -->
+    <TextView
+        android:id="@+id/txtDescripcionFundacion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="18dp"
+        android:paddingBottom="12dp"
+        android:text="Conoce nuestra comunidad"
+        android:textSize="13sp"
+        android:textColor="#718096"/>
+
+    <!-- INFORMACION SECUNDARIA -->
+    <TextView
+        android:id="@+id/txtDireccionFundacion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="18dp"
+        android:textColor="#718096"
+        android:textSize="12sp"/>
+
+    <TextView
+        android:id="@+id/txtProgramasFundacion"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingHorizontal="18dp"
+        android:paddingTop="5dp"
+        android:paddingBottom="10dp"
+        android:textColor="#52645A"
+        android:textSize="12sp"/>
+
+    <!-- CONTENIDO DINAMICO -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:id="@+id/contenedorContenido"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp"/>
+
+    </ScrollView>
+
+    <!-- NAVEGACION INFERIOR -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="65dp"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:elevation="8dp">
+
+        <Button
+            android:id="@+id/btnNovedades"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Novedades"
+            android:textSize="11sp"
+            android:textAllCaps="false"
+            android:textColor="#287A5A"
+            android:backgroundTint="#E4F2EA"/>
+
+        <Button
+            android:id="@+id/btnTrabajos"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Trabajos"
+            android:textSize="11sp"
+            android:textAllCaps="false"
+            android:textColor="#52645A"
+            android:backgroundTint="#FFFFFF"/>
+
+        <Button
+            android:id="@+id/btnPersonas"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="Personas"
+            android:textSize="11sp"
+            android:textAllCaps="false"
+            android:textColor="#52645A"
+            android:backgroundTint="#FFFFFF"/>
+
+    </LinearLayout>
+
+</LinearLayout>

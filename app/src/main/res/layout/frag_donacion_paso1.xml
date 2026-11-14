@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Información del objeto"
+            android:textSize="23sp"
+            android:textStyle="bold"
+            android:textColor="#287A5A"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cuéntanos qué deseas donar."
+            android:textSize="14sp"
+            android:textColor="#718096"
+            android:layout_marginBottom="20dp"/>
+
+        <!-- TIPO DE OBJETO -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tipo de objeto"
+            android:textStyle="bold"
+            android:textColor="#263C50"/>
+
+        <EditText
+            android:id="@+id/edtTipoObjeto"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:hint="Ej. Ropa, alimentos, muebles..."
+            android:background="@drawable/bg_input"
+            android:padding="12dp"
+            android:layout_marginTop="7dp"/>
+
+        <!-- CATEGORIA -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Categoría"
+            android:textStyle="bold"
+            android:textColor="#263C50"
+            android:layout_marginTop="17dp"/>
+
+        <Spinner
+            android:id="@+id/spnCategoria"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_input"
+            android:layout_marginTop="7dp"
+            android:padding="8dp"/>
+
+        <!-- DESCRIPCION -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Descripción"
+            android:textStyle="bold"
+            android:textColor="#263C50"
+            android:layout_marginTop="17dp"/>
+
+        <EditText
+            android:id="@+id/edtDescripcion"
+            android:layout_width="match_parent"
+            android:layout_height="105dp"
+            android:hint="Describe las características del objeto..."
+            android:gravity="top"
+            android:padding="12dp"
+            android:background="@drawable/bg_input"
+            android:inputType="textMultiLine"
+            android:layout_marginTop="7dp"/>
+
+        <!-- CANTIDAD Y UNIDAD -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Cantidad / Unidad"
+            android:textStyle="bold"
+            android:textColor="#263C50"
+            android:layout_marginTop="17dp"/>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:orientation="horizontal"
+            android:layout_marginTop="7dp">
+
+            <EditText
+                android:id="@+id/edtCantidad"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:hint="Cantidad"
+                android:inputType="numberDecimal"
+                android:background="@drawable/bg_input"
+                android:padding="12dp"/>
+
+            <Spinner
+                android:id="@+id/spnUnidad"
+                android:layout_width="135dp"
+                android:layout_height="match_parent"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_input"
+                android:padding="5dp"/>
+
+        </LinearLayout>
+
+        <!-- CONDICION -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Condición del objeto"
+            android:textStyle="bold"
+            android:textColor="#263C50"
+            android:layout_marginTop="17dp"/>
+
+        <Spinner
+            android:id="@+id/spnCondicion"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_input"
+            android:layout_marginTop="7dp"
+            android:padding="8dp"/>
+
+        <!-- ENTREGA -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Condiciones de entrega"
+            android:textStyle="bold"
+            android:textColor="#263C50"
+            android:layout_marginTop="17dp"/>
+
+        <Spinner
+            android:id="@+id/spnEntrega"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_input"
+            android:layout_marginTop="7dp"
+            android:padding="8dp"/>
+
+        <!-- FUNDACION -->
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Fundación destinada"
+            android:textStyle="bold"
+            android:textColor="#263C50"
+            android:layout_marginTop="17dp"/>
+
+        <Spinner
+            android:id="@+id/spnFundacion"
+            android:layout_width="match_parent"
+            android:layout_height="52dp"
+            android:background="@drawable/bg_input"
+            android:layout_marginTop="7dp"
+            android:padding="8dp"/>
+
+        <Button
+            android:id="@+id/btnSiguiente1"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:text="Continuar"
+            android:textAllCaps="false"
+            android:textStyle="bold"
+            android:textColor="#FFFFFF"
+            android:background="@drawable/bg_button"
+            android:backgroundTint="@null"
+            android:layout_marginTop="25dp"
+            android:layout_marginBottom="20dp"/>
+
+    </LinearLayout>
+
+</ScrollView>

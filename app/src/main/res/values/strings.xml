@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Solidaryhands</string>
+    <string name="login_title">Solidaryhands</string>
+    <string name="login_subtitle">Juntos podemos ayudar</string>
+    <string name="username">Usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="username_hint">Ingresa tu correo</string>
+    <string name="password_hint">Ingresa tu contraseña</string>
+    <string name="login_button">Iniciar sesión</string>
+    <string name="no_account">¿No tienes una cuenta?</string>
+    <string name="register">Regístrate aquí</string>
+</resources>

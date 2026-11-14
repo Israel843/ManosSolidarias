@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="sh_primary">#287A5A</color>
+    <color name="sh_secondary">#75B99A</color>
+    <color name="sh_text">#202923</color>
+    <color name="sh_text_secondary">#66736B</color>
+    <color name="primary">#397FB5</color>
+    <color name="primary_dark">#285D87</color>
+    <color name="background">#F4F6F9</color>
+    <color name="white">#FFFFFF</color>
+    <color name="text_primary">#263C50</color>
+    <color name="text_secondary">#718096</color>
+    <color name="input_border">#D5DCE4</color>
+    <color name="avatar_background">#E8F1FA</color>
+</resources>
