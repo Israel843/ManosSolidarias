@@ -40,6 +40,7 @@ public class RegistroActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registro);
+        UiInsets.aplicar(this, R.id.registroContent, R.id.registroContent, true, false);
 
         // CONECTAR CAMPOS XML
         edtNombre = findViewById(R.id.edtNombre);

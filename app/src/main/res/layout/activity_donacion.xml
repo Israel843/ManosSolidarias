@@ -1,59 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F8F6">
+    android:background="@drawable/bg_auth">
 
     <LinearLayout
+        android:id="@+id/donacionHeader"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
+        android:minHeight="72dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
-        android:paddingHorizontal="16dp"
-        android:background="#FFFFFF">
+        android:paddingHorizontal="18dp"
+        android:background="@android:color/transparent">
 
         <ImageButton
             android:id="@+id/btnVolver"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:src="@android:drawable/ic_media_previous"
+            android:src="@drawable/ic_back"
             android:background="@android:color/transparent"
-            android:backgroundTint="#287A5A"
+            android:tint="@color/sh_primary"
+            tools:ignore="UseAppTint"
             android:contentDescription="Volver"/>
 
         <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Registrar donación"
-            android:textColor="#287A5A"
-            android:textSize="21sp"
+            android:text="Nueva donación"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
             android:textStyle="bold"
-            android:gravity="center"/>
+            android:gravity="start"
+            android:layout_marginStart="10dp"/>
 
         <TextView
             android:id="@+id/txtNumeroPaso"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1 de 3"
-            android:textColor="#287A5A"
+            android:text="Paso 1 de 3"
+            android:textColor="@color/sh_primary"
             android:textStyle="bold"/>
 
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="6dp"
+        android:layout_height="7dp"
+        android:layout_marginHorizontal="28dp"
+        android:layout_marginBottom="4dp"
         android:orientation="horizontal"
-        android:background="#DCE8DF">
+        android:background="@drawable/bg_step_track">
 
         <View
             android:id="@+id/progreso"
             android:layout_width="150dp"
             android:layout_height="match_parent"
-            android:background="#287A5A"/>
+            android:background="@drawable/bg_step_active"/>
 
     </LinearLayout>
 

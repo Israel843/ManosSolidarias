@@ -1,188 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingHorizontal="20dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="28dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fotografías del objeto"
-            android:textColor="#287A5A"
-            android:textSize="23sp"
-            android:textStyle="bold"/>
+            android:text="Fotografías"
+            android:textColor="@color/text_primary"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Agrega fotografías claras para evaluar tu donación."
-            android:textColor="#718096"
-            android:textSize="14sp"
-            android:layout_marginTop="6dp"
-            android:layout_marginBottom="20dp"/>
+            android:layout_marginTop="4dp"
+            android:text="Agrega imágenes claras para evaluar mejor tu donación."
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="22dp"
             android:orientation="horizontal">
 
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="180dp"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_photo_tile"
+                android:orientation="vertical"
+                android:padding="8dp">
+                <ImageView android:id="@+id/imgFrente" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:contentDescription="Fotografía frontal" android:padding="22dp" android:scaleType="centerCrop" android:src="@android:drawable/ic_menu_camera" app:tint="@color/sh_primary" />
+                <Button android:id="@+id/btnFrente" android:layout_width="match_parent" android:layout_height="48dp" android:backgroundTint="@android:color/transparent" android:text="Frontal" android:textAllCaps="false" android:textColor="@color/sh_primary" android:textStyle="bold" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="180dp"
+                android:layout_marginStart="6dp"
+                android:layout_weight="1"
+                android:background="@drawable/bg_photo_tile"
+                android:orientation="vertical"
+                android:padding="8dp">
+                <ImageView android:id="@+id/imgTrasera" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:contentDescription="Fotografía trasera" android:padding="22dp" android:scaleType="centerCrop" android:src="@android:drawable/ic_menu_camera" app:tint="@color/sh_primary" />
+                <Button android:id="@+id/btnTrasera" android:layout_width="match_parent" android:layout_height="48dp" android:backgroundTint="@android:color/transparent" android:text="Trasera" android:textAllCaps="false" android:textColor="@color/sh_primary" android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
-        <!-- FRENTE -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="1. Fotografía frontal"
-            android:textStyle="bold"
-            android:textColor="#263C50"/>
-
-        <ImageView
-            android:id="@+id/imgFrente"
-            android:layout_width="match_parent"
-            android:layout_height="155dp"
-            android:layout_marginTop="8dp"
-            android:background="#E4F1E9"
-            android:src="@android:drawable/ic_menu_camera"
-            android:tint="#287A5A"
-            android:padding="50dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="Fotografía frontal"/>
-
-        <Button
-            android:id="@+id/btnFrente"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:text="Seleccionar fotografía"
-            android:textAllCaps="false"
-            android:backgroundTint="#287A5A"
-            android:textColor="#FFFFFF"/>
-
-        <!-- TRASERA -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="2. Fotografía trasera"
-            android:textStyle="bold"
-            android:textColor="#263C50"
-            android:layout_marginTop="15dp"/>
-
-        <ImageView
-            android:id="@+id/imgTrasera"
-            android:layout_width="match_parent"
-            android:layout_height="155dp"
-            android:layout_marginTop="8dp"
-            android:background="#E4F1E9"
-            android:src="@android:drawable/ic_menu_camera"
-            android:tint="#287A5A"
-            android:padding="50dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="Fotografía trasera"/>
-
-        <Button
-            android:id="@+id/btnTrasera"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:text="Seleccionar fotografía"
-            android:textAllCaps="false"
-            android:backgroundTint="#287A5A"
-            android:textColor="#FFFFFF"/>
-
-        <!-- DETALLE -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="3. Detalle / Etiqueta"
-            android:textStyle="bold"
-            android:textColor="#263C50"
-            android:layout_marginTop="15dp"/>
-
-        <ImageView
-            android:id="@+id/imgDetalle"
-            android:layout_width="match_parent"
-            android:layout_height="155dp"
-            android:layout_marginTop="8dp"
-            android:background="#E4F1E9"
-            android:src="@android:drawable/ic_menu_camera"
-            android:tint="#287A5A"
-            android:padding="50dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="Detalle del objeto"/>
-
-        <Button
-            android:id="@+id/btnDetalle"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:text="Seleccionar fotografía"
-            android:textAllCaps="false"
-            android:backgroundTint="#287A5A"
-            android:textColor="#FFFFFF"/>
-
-        <!-- EXTRA -->
-        <TextView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="4. Fotografía extra"
-            android:textStyle="bold"
-            android:textColor="#263C50"
-            android:layout_marginTop="15dp"/>
-
-        <ImageView
-            android:id="@+id/imgExtra"
-            android:layout_width="match_parent"
-            android:layout_height="155dp"
-            android:layout_marginTop="8dp"
-            android:background="#E4F1E9"
-            android:src="@android:drawable/ic_menu_camera"
-            android:tint="#287A5A"
-            android:padding="50dp"
-            android:scaleType="centerCrop"
-            android:contentDescription="Fotografía extra"/>
-
-        <Button
-            android:id="@+id/btnExtra"
-            android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:text="Seleccionar fotografía"
-            android:textAllCaps="false"
-            android:backgroundTint="#287A5A"
-            android:textColor="#FFFFFF"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="25dp"
-            android:layout_marginBottom="20dp">
+            android:layout_marginTop="12dp"
+            android:orientation="horizontal">
 
-            <Button
-                android:id="@+id/btnAnterior2"
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="180dp"
+                android:layout_marginEnd="6dp"
                 android:layout_weight="1"
-                android:text="Regresar"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_input"
-                android:backgroundTint="@null"/>
+                android:background="@drawable/bg_photo_tile"
+                android:orientation="vertical"
+                android:padding="8dp">
+                <ImageView android:id="@+id/imgDetalle" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:contentDescription="Fotografía de detalle" android:padding="22dp" android:scaleType="centerCrop" android:src="@android:drawable/ic_menu_camera" app:tint="@color/sh_primary" />
+                <Button android:id="@+id/btnDetalle" android:layout_width="match_parent" android:layout_height="48dp" android:backgroundTint="@android:color/transparent" android:text="Detalle" android:textAllCaps="false" android:textColor="@color/sh_primary" android:textStyle="bold" />
+            </LinearLayout>
 
-            <Button
-                android:id="@+id/btnSiguiente2"
+            <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="55dp"
+                android:layout_height="180dp"
+                android:layout_marginStart="6dp"
                 android:layout_weight="1"
-                android:layout_marginStart="10dp"
-                android:text="Analizar imágenes"
-                android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_button"
-                android:backgroundTint="@null"/>
-
+                android:background="@drawable/bg_photo_tile"
+                android:orientation="vertical"
+                android:padding="8dp">
+                <ImageView android:id="@+id/imgExtra" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:contentDescription="Fotografía extra" android:padding="22dp" android:scaleType="centerCrop" android:src="@android:drawable/ic_menu_camera" app:tint="@color/sh_primary" />
+                <Button android:id="@+id/btnExtra" android:layout_width="match_parent" android:layout_height="48dp" android:backgroundTint="@android:color/transparent" android:text="Extra" android:textAllCaps="false" android:textColor="@color/sh_primary" android:textStyle="bold" />
+            </LinearLayout>
         </LinearLayout>
 
-    </LinearLayout>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/bg_surface_soft"
+            android:drawableStart="@android:drawable/ic_dialog_info"
+            android:drawablePadding="10dp"
+            android:padding="14dp"
+            android:text="Usa buena luz y un fondo limpio."
+            android:textColor="@color/text_primary"
+            android:textSize="13sp" />
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="horizontal">
+            <Button android:id="@+id/btnAnterior2" android:layout_width="0dp" android:layout_height="54dp" android:layout_marginEnd="6dp" android:layout_weight="1" android:background="@drawable/bg_button_outline" android:backgroundTint="@null" android:text="Regresar" android:textAllCaps="false" android:textColor="@color/sh_primary" android:textStyle="bold" />
+            <Button android:id="@+id/btnSiguiente2" android:layout_width="0dp" android:layout_height="54dp" android:layout_marginStart="6dp" android:layout_weight="1.5" android:background="@drawable/bg_button" android:backgroundTint="@null" android:text="Analizar imágenes" android:textAllCaps="false" android:textColor="@color/white" android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
 </ScrollView>

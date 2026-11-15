@@ -1,130 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="#F5F8F6"
-    android:fillViewport="true">
-
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:background="@drawable/bg_auth" android:fillViewport="true">
     <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:gravity="center"
-        android:padding="28dp">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="ManosSolidarias"
-            android:textSize="30sp"
-            android:textStyle="bold"
-            android:textColor="#287A5A"/>
-
-        <!-- =====================================================================
-             AQUÍ VA TU IMAGEN
-
-             Para poner tu logo:
-               1) Copia tu imagen (png o jpg) en:  app/src/main/res/drawable/
-                  y llámala:  logo_login.png   (solo minúsculas, sin espacios)
-               2) En el ImageView de abajo cambia la línea
-                      android:src="@android:drawable/ic_menu_myplaces"
-                  por
-                      android:src="@drawable/logo_login"
-               3) Borra también la línea  android:padding="20dp"  si quieres que la
-                  imagen ocupe todo el círculo.
-             ===================================================================== -->
+        android:id="@+id/loginContent"
+        android:layout_width="match_parent" android:layout_height="match_parent"
+        android:gravity="center_horizontal" android:orientation="vertical"
+        android:paddingHorizontal="28dp" android:paddingTop="24dp" android:paddingBottom="28dp">
         <ImageView
-            android:id="@+id/imgLogo"
-            android:layout_width="110dp"
-            android:layout_height="110dp"
-            android:background="@drawable/bg_avatar"
-            android:padding="20dp"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="10dp"
-            android:src="@android:drawable/ic_menu_myplaces"
-            android:contentDescription="Logotipo de Solidaryhands"
-            android:backgroundTint="@color/primary_dark"/>
-        <!-- ============== FIN DE TU IMAGEN ============== -->
-
-        <!-- SUBTITULO -->
+            android:id="@+id/imgLogo" android:layout_width="200dp" android:layout_height="180dp"
+            android:contentDescription="Marca de Manos Solidarias" android:scaleType="centerCrop"
+            android:src="@drawable/manos_solidarias_mark" />
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/login_subtitle"
-            android:textSize="14sp"
-            android:textColor="@color/text_secondary"
-            android:layout_marginTop="5dp"
-            android:layout_marginBottom="30dp"/>
-
-        <!-- CORREO (teclado de correo, texto negro) -->
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="2dp" android:gravity="center" android:lineSpacingExtra="-6dp"
+            android:text="Manos\nSolidarias" android:textColor="@color/sh_primary_dark"
+            android:textSize="39sp" android:textStyle="bold" />
+        <TextView
+            android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="8dp" android:text="Juntos podemos ayudar"
+            android:textColor="@color/text_secondary" android:textSize="17sp" />
         <EditText
-            android:id="@+id/edtUsuario"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:background="@drawable/bg_input"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:hint="@string/username_hint"
-            android:inputType="textEmailAddress"
-            android:singleLine="true"
-            android:textColor="#000000"
-            android:textColorHint="#78909C"
-            android:textSize="14sp"/>
-
-        <!-- CONTRASEÑA (oculta con puntos, sin autocorrección, texto negro) -->
+            android:id="@+id/edtUsuario" android:layout_width="match_parent" android:layout_height="60dp"
+            android:layout_marginTop="42dp" android:background="@drawable/bg_input"
+            android:drawableStart="@drawable/ic_mail" android:drawablePadding="14dp"
+            android:hint="Correo electrónico" android:inputType="textEmailAddress"
+            android:paddingHorizontal="18dp" android:singleLine="true"
+            android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="16sp" />
         <EditText
-            android:id="@+id/edtContrasena"
-            android:layout_width="match_parent"
-            android:layout_height="52dp"
-            android:background="@drawable/bg_input"
-            android:layout_marginTop="10dp"
-            android:paddingStart="14dp"
-            android:paddingEnd="14dp"
-            android:hint="@string/password_hint"
-            android:inputType="textPassword"
-            android:singleLine="true"
-            android:textColor="#000000"
-            android:textColorHint="#78909C"
-            android:textSize="14sp" />
-
+            android:id="@+id/edtContrasena" android:layout_width="match_parent" android:layout_height="60dp"
+            android:layout_marginTop="14dp" android:background="@drawable/bg_input"
+            android:drawableStart="@drawable/ic_lock" android:drawablePadding="14dp"
+            android:drawableEnd="@drawable/ic_eye"
+            android:hint="Contraseña" android:inputType="textPassword"
+            android:paddingHorizontal="18dp" android:singleLine="true"
+            android:textColor="@color/text_primary" android:textColorHint="@color/text_secondary" android:textSize="16sp" />
         <Button
-            android:id="@+id/btnIniciarSesion"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:background="@drawable/bg_input"
-            android:backgroundTint="@color/sh_primary"
-            android:text="Iniciar sesión"
-            android:textAllCaps="false"
-            android:textColor="#FFFFFF" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
-            android:gravity="center"
-            android:orientation="horizontal">
-            <!-- TEXTO REGISTRO -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/no_account"
-                android:textColor="@color/text_secondary"
-                android:textSize="13sp"/>
-
-            <!-- ENLACE REGISTRARSE -->
-            <TextView
-                android:id="@+id/txtRegistrarse"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                android:focusable="true"
-                android:padding="8dp"
-                android:text="@string/register"
-                android:textColor="@color/primary"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-        </LinearLayout>
-
+            android:id="@+id/btnIniciarSesion" android:layout_width="match_parent" android:layout_height="60dp"
+            android:layout_marginTop="28dp" android:background="@drawable/bg_button" android:backgroundTint="@color/sh_primary"
+            android:elevation="3dp" android:text="Iniciar sesión" android:textAllCaps="false"
+            android:textColor="@color/white" android:textSize="17sp" android:textStyle="bold" />
+        <TextView
+            android:id="@+id/txtRegistrarse" android:layout_width="wrap_content" android:layout_height="wrap_content"
+            android:layout_marginTop="16dp" android:clickable="true" android:focusable="true" android:padding="10dp"
+            android:text="Crear una cuenta" android:textColor="@color/sh_coral_dark"
+            android:textSize="15sp" android:textStyle="bold" />
     </LinearLayout>
 </ScrollView>

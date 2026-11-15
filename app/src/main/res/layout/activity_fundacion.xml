@@ -2,15 +2,18 @@
 
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F8F6">
+    android:background="@color/background">
 
     <!-- ENCABEZADO -->
     <LinearLayout
+        android:id="@+id/fundacionHeader"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp"
         android:gravity="center_vertical"
         android:paddingHorizontal="12dp"
         android:orientation="horizontal">
@@ -19,9 +22,10 @@
             android:id="@+id/btnVolverFundacion"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:src="@android:drawable/ic_media_previous"
+            android:src="@drawable/ic_back"
             android:background="@android:color/transparent"
-            android:backgroundTint="#287A5A"
+            android:tint="@color/sh_primary"
+            tools:ignore="UseAppTint"
             android:contentDescription="Volver"/>
 
         <TextView
@@ -32,39 +36,43 @@
             android:text="Fundación"
             android:textSize="19sp"
             android:textStyle="bold"
-            android:textColor="#287A5A"/>
+            android:textColor="@color/text_primary"/>
 
     </LinearLayout>
 
-    <!-- DESCRIPCION -->
-    <TextView
-        android:id="@+id/txtDescripcionFundacion"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingHorizontal="18dp"
-        android:paddingBottom="12dp"
-        android:text="Conoce nuestra comunidad"
-        android:textSize="13sp"
-        android:textColor="#718096"/>
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/bg_surface_soft"
+        android:orientation="vertical"
+        android:padding="18dp">
 
-    <!-- INFORMACION SECUNDARIA -->
-    <TextView
-        android:id="@+id/txtDireccionFundacion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="18dp"
-        android:textColor="#718096"
-        android:textSize="12sp"/>
+        <TextView
+            android:id="@+id/txtDescripcionFundacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Conoce nuestra comunidad"
+            android:textColor="@color/text_primary"
+            android:textSize="15sp" />
 
-    <TextView
-        android:id="@+id/txtProgramasFundacion"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingHorizontal="18dp"
-        android:paddingTop="5dp"
-        android:paddingBottom="10dp"
-        android:textColor="#52645A"
-        android:textSize="12sp"/>
+        <TextView
+            android:id="@+id/txtDireccionFundacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:textColor="@color/text_secondary"
+            android:textSize="12sp" />
+
+        <TextView
+            android:id="@+id/txtProgramasFundacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/sh_primary"
+            android:textSize="12sp"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <!-- CONTENIDO DINAMICO -->
     <ScrollView
@@ -82,12 +90,27 @@
 
     </ScrollView>
 
+    <Button
+        android:id="@+id/btnDonarFundacion"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_button"
+        android:backgroundTint="@null"
+        android:text="Donar a esta fundación"
+        android:textAllCaps="false"
+        android:textColor="@color/white"
+        android:textStyle="bold" />
+
     <!-- NAVEGACION INFERIOR -->
     <LinearLayout
+        android:id="@+id/fundacionBottomNav"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="wrap_content"
+        android:minHeight="65dp"
         android:orientation="horizontal"
-        android:background="#FFFFFF"
+        android:background="@drawable/bg_nav"
         android:elevation="8dp">
 
         <Button
@@ -98,8 +121,8 @@
             android:text="Novedades"
             android:textSize="11sp"
             android:textAllCaps="false"
-            android:textColor="#287A5A"
-            android:backgroundTint="#E4F2EA"/>
+            android:textColor="@color/sh_primary"
+            android:backgroundTint="@color/sh_primary_soft"/>
 
         <Button
             android:id="@+id/btnTrabajos"
@@ -109,8 +132,8 @@
             android:text="Trabajos"
             android:textSize="11sp"
             android:textAllCaps="false"
-            android:textColor="#52645A"
-            android:backgroundTint="#FFFFFF"/>
+            android:textColor="@color/text_secondary"
+            android:backgroundTint="@color/white"/>
 
         <Button
             android:id="@+id/btnPersonas"
@@ -120,8 +143,8 @@
             android:text="Personas"
             android:textSize="11sp"
             android:textAllCaps="false"
-            android:textColor="#52645A"
-            android:backgroundTint="#FFFFFF"/>
+            android:textColor="@color/text_secondary"
+            android:backgroundTint="@color/white"/>
 
     </LinearLayout>
 

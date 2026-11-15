@@ -19,6 +19,7 @@
 
     <!-- BARRA SUPERIOR -->
     <LinearLayout
+        android:id="@+id/scannerHeader"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
@@ -57,6 +58,7 @@
 
     <!-- BARRA INFERIOR -->
     <LinearLayout
+        android:id="@+id/scannerBottomActions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"

@@ -41,6 +41,7 @@ public class PerfilActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_perfil);
+        UiInsets.aplicar(this, R.id.perfilHeader, R.id.perfilScroll, true, true);
 
         sessionManager = SessionManager.getInstance(this);
 

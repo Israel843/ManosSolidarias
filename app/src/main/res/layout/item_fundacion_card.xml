@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="245dp"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="300dp"
+    android:layout_height="112dp"
+    android:orientation="horizontal"
+    android:gravity="center_vertical"
     android:padding="14dp"
     android:layout_marginEnd="12dp"
     android:background="@drawable/bg_card"
@@ -13,44 +15,53 @@
 
     <ImageView
         android:id="@+id/imgLogoFundacion"
-        android:layout_width="match_parent"
-        android:layout_height="120dp"
-        android:background="#E4F1E9"
+        android:layout_width="76dp"
+        android:layout_height="76dp"
+        android:background="@drawable/bg_surface_soft"
         android:contentDescription="Logo de fundación"
-        android:padding="35dp"
+        android:padding="18dp"
         android:src="@android:drawable/ic_menu_myplaces"
-        android:backgroundTint="#287A5A" />
+        android:tint="@color/sh_primary"
+        tools:ignore="UseAppTint" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:layout_marginStart="14dp"
+        android:orientation="vertical">
 
     <TextView
         android:id="@+id/txtNombreFundacionItem"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Nombre Fundación"
-        android:textColor="#287A5A"
+        android:textColor="@color/text_primary"
         android:textSize="18sp"
         android:textStyle="bold"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="0dp"
         android:maxLines="1"
         android:ellipsize="end"/>
 
     <TextView
         android:id="@+id/txtDescripcionFundacionItem"
         android:layout_width="match_parent"
-        android:layout_height="65dp"
+        android:layout_height="wrap_content"
         android:text="Descripción de la labor de la fundación."
-        android:textColor="#52645A"
+        android:textColor="@color/text_secondary"
         android:textSize="13sp"
         android:layout_marginTop="6dp"
-        android:maxLines="3"
+        android:maxLines="2"
         android:ellipsize="end"/>
 
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Ver fundación →"
-        android:textColor="#287A5A"
+        android:text="Ver fundación  →"
+        android:textColor="@color/sh_primary"
         android:textStyle="bold"
         android:textSize="14sp"
-        android:layout_marginTop="8dp"/>
+        android:layout_marginTop="5dp"/>
+    </LinearLayout>
 
 </LinearLayout>

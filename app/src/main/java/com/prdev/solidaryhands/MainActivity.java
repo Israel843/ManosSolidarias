@@ -2,7 +2,10 @@ package com.prdev.solidaryhands;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
+import android.view.MotionEvent;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -51,12 +54,32 @@ public class MainActivity extends AppCompatActivity {
         }
 
         setContentView(R.layout.activity_main);
+        UiInsets.aplicar(this, R.id.loginContent, R.id.loginContent, true, false);
 
         // CONECTAR ELEMENTOS XML
         edtUsuario = findViewById(R.id.edtUsuario);
         edtContrasena = findViewById(R.id.edtContrasena);
         btnIniciarSesion = findViewById(R.id.btnIniciarSesion);
         txtRegistrarse = findViewById(R.id.txtRegistrarse);
+
+        edtContrasena.setOnTouchListener((view, event) -> {
+            if (event.getAction() != MotionEvent.ACTION_UP
+                    || edtContrasena.getCompoundDrawables()[2] == null) {
+                return false;
+            }
+            int limiteIcono = edtContrasena.getWidth()
+                    - edtContrasena.getPaddingEnd()
+                    - edtContrasena.getCompoundDrawables()[2].getBounds().width();
+            if (event.getX() < limiteIcono) return false;
+
+            boolean oculta = edtContrasena.getTransformationMethod()
+                    instanceof PasswordTransformationMethod;
+            edtContrasena.setTransformationMethod(oculta
+                    ? HideReturnsTransformationMethod.getInstance()
+                    : PasswordTransformationMethod.getInstance());
+            edtContrasena.setSelection(edtContrasena.length());
+            return true;
+        });
 
         // BOTON INICIAR SESION CON SUPABASE AUTH
         btnIniciarSesion.setOnClickListener(v -> iniciarSesionSupabase());

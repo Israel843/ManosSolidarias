@@ -55,6 +55,7 @@ public class HomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
+        UiInsets.aplicar(this, R.id.homeHeader, R.id.homeBottomNav, false, true);
 
         sessionManager = SessionManager.getInstance(this);
 
@@ -105,6 +106,16 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, PerfilActivity.class);
             startActivity(intent);
         });
+
+        // La barra inferior replica las rutas principales sin quitar el menú lateral.
+        findViewById(R.id.btnNavInicio).setOnClickListener(v ->
+                findViewById(R.id.homeScroll).scrollTo(0, 0));
+        findViewById(R.id.btnNavDonar).setOnClickListener(v ->
+                startActivity(new Intent(HomeActivity.this, DonacionActivity.class)));
+        findViewById(R.id.btnNavHistorial).setOnClickListener(v ->
+                startActivity(new Intent(HomeActivity.this, HistorialActivity.class)));
+        findViewById(R.id.btnNavPerfil).setOnClickListener(v ->
+                startActivity(new Intent(HomeActivity.this, PerfilActivity.class)));
 
         // BUSCADOR EN TIEMPO REAL
         edtBuscar.addTextChangedListener(new TextWatcher() {

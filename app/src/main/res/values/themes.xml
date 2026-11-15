@@ -4,13 +4,24 @@
          el texto que escribías en los campos salía BLANCO sobre fondo blanco.
          Ahora el tema es siempre claro y el texto de los campos es NEGRO. -->
     <style name="Base.Theme.Solidaryhands" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/sh_primary</item>
+        <item name="colorPrimaryContainer">@color/sh_primary_soft</item>
+        <item name="colorSecondary">@color/sh_coral</item>
+        <item name="colorAccent">@color/sh_coral</item>
+        <item name="android:fontFamily">sans-serif</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:statusBarColor">@color/background</item>
+        <item name="android:navigationBarColor">@color/background</item>
+        <item name="android:windowActionModeOverlay">true</item>
+        <item name="android:colorControlNormal">@color/sh_primary_dark</item>
+        <item name="android:colorControlActivated">@color/sh_primary</item>
         <!-- Texto negro en los campos de escritura -->
         <item name="android:editTextColor">@color/texto_negro</item>
         <item name="editTextColor">@color/texto_negro</item>
         <!-- Texto de ayuda (hint) en gris -->
         <item name="android:textColorHint">@color/texto_hint</item>
         <!-- Texto negro por defecto (también en los Spinner / listas desplegables) -->
-        <item name="android:textColorPrimary">@color/texto_negro</item>
+        <item name="android:textColorPrimary">@color/text_primary</item>
     </style>
 
     <style name="Theme.Solidaryhands" parent="Base.Theme.Solidaryhands" />

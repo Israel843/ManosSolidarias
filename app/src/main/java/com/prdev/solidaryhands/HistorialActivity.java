@@ -33,6 +33,7 @@ public class HistorialActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_historial);
+        UiInsets.aplicar(this, R.id.historialScreen, R.id.historialScreen, true, true);
 
         sessionManager = SessionManager.getInstance(this);
 
@@ -142,7 +143,7 @@ public class HistorialActivity extends AppCompatActivity {
         TextView titulo = crearTexto(
                 "Donación #" + String.format("%03d", numero),
                 17,
-                "#287A5A",
+                "#0B8E83",
                 true
         );
         encabezado.addView(titulo, new LinearLayout.LayoutParams(0, -2, 1));
@@ -150,26 +151,26 @@ public class HistorialActivity extends AppCompatActivity {
         TextView estado = crearTexto(
                 d.getEstado(),
                 12,
-                "#B7791F",
+                "#9A6700",
                 true
         );
         encabezado.addView(estado);
         tarjeta.addView(encabezado);
 
         // INFORMACIÓN DEL OBJETO
-        agregarTexto(tarjeta, "Objeto: " + d.getTipo(), 16, "#263C50", true);
-        agregarTexto(tarjeta, "Categoría: " + d.getCategoria(), 14, "#52645A", false);
-        agregarTexto(tarjeta, "Descripción: " + d.getDescripcion(), 14, "#52645A", false);
-        agregarTexto(tarjeta, "Cantidad: " + d.getCantidad() + " " + d.getUnidad(), 14, "#52645A", false);
-        agregarTexto(tarjeta, "Condición: " + d.getCondicion(), 14, "#52645A", false);
+        agregarTexto(tarjeta, "Objeto: " + d.getTipo(), 16, "#102B32", true);
+        agregarTexto(tarjeta, "Categoría: " + d.getCategoria(), 14, "#586A6E", false);
+        agregarTexto(tarjeta, "Descripción: " + d.getDescripcion(), 14, "#586A6E", false);
+        agregarTexto(tarjeta, "Cantidad: " + d.getCantidad() + " " + d.getUnidad(), 14, "#586A6E", false);
+        agregarTexto(tarjeta, "Condición: " + d.getCondicion(), 14, "#586A6E", false);
 
         // FUNDACIÓN DESTINATARIA
-        agregarTexto(tarjeta, "Fundación destinataria", 15, "#263C50", true);
-        agregarTexto(tarjeta, d.getFundacion(), 17, "#287A5A", true);
+        agregarTexto(tarjeta, "Fundación destinataria", 15, "#102B32", true);
+        agregarTexto(tarjeta, d.getFundacion(), 17, "#0B8E83", true);
 
         // ENTREGA Y FECHA
-        agregarTexto(tarjeta, "Entrega: " + d.getEntrega(), 13, "#718096", false);
-        agregarTexto(tarjeta, "Fecha: " + d.getFecha(), 13, "#718096", false);
+        agregarTexto(tarjeta, "Entrega: " + d.getEntrega(), 13, "#586A6E", false);
+        agregarTexto(tarjeta, "Fecha: " + d.getFecha(), 13, "#586A6E", false);
 
         contenedorDonaciones.addView(tarjeta);
     }

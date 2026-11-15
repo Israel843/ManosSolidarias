@@ -55,6 +55,7 @@ public class ScannerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_scanner);
+        UiInsets.aplicar(this, R.id.scannerHeader, R.id.scannerBottomActions, false, false);
 
         previewView = findViewById(R.id.previewView);
         btnCapturar = findViewById(R.id.btnCapturar);

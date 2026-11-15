@@ -8,22 +8,24 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:paddingHorizontal="20dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="28dp">
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Análisis con red neuronal"
+            android:text="Resultado del análisis"
             android:textSize="23sp"
             android:textStyle="bold"
-            android:textColor="#287A5A"/>
+            android:textColor="@color/text_primary"/>
 
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="La red neuronal está evaluando las fotografías de tu donación y le dará una puntuación de 0 a 10."
+            android:text="Evaluamos la calidad de las fotos y el estado visible del objeto."
             android:textSize="14sp"
-            android:textColor="#718096"
+            android:textColor="@color/text_secondary"
             android:layout_marginTop="6dp"/>
 
         <ProgressBar
@@ -32,7 +34,7 @@
             android:layout_width="match_parent"
             android:layout_height="10dp"
             android:progress="0"
-            android:progressTint="#287A5A"
+            android:progressTint="@color/sh_primary"
             android:layout_marginTop="20dp"/>
 
         <TextView
@@ -40,7 +42,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Preparando análisis..."
-            android:textColor="#287A5A"
+            android:textColor="@color/sh_primary"
             android:textStyle="bold"
             android:gravity="center"
             android:layout_marginTop="10dp"/>
@@ -61,7 +63,7 @@
                 android:text="Calidad de fotografía"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                android:textColor="#263C50"/>
+                android:textColor="@color/text_primary"/>
 
             <TextView
                 android:id="@+id/txtCalidad"
@@ -70,7 +72,7 @@
                 android:text="Pendiente"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                android:textColor="#287A5A"
+                android:textColor="@color/sh_primary"
                 android:layout_marginTop="10dp"/>
 
             <ProgressBar
@@ -80,14 +82,14 @@
                 android:layout_height="12dp"
                 android:max="10"
                 android:progress="0"
-                android:progressTint="#287A5A"/>
+                android:progressTint="@color/sh_primary"/>
 
             <TextView
                 android:id="@+id/txtDetalleCalidad"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Evaluación de iluminación, enfoque y nitidez."
-                android:textColor="#718096"
+                android:textColor="@color/text_secondary"
                 android:textSize="13sp"
                 android:layout_marginTop="8dp"/>
 
@@ -108,7 +110,7 @@
                 android:text="Puntuación del objeto (IA)"
                 android:textSize="17sp"
                 android:textStyle="bold"
-                android:textColor="#263C50"/>
+                android:textColor="@color/text_primary"/>
 
             <TextView
                 android:id="@+id/txtEstadoObjeto"
@@ -117,7 +119,7 @@
                 android:text="Pendiente"
                 android:textSize="26sp"
                 android:textStyle="bold"
-                android:textColor="#287A5A"
+                android:textColor="@color/sh_primary"
                 android:layout_marginTop="10dp"/>
 
             <ProgressBar
@@ -127,14 +129,14 @@
                 android:layout_height="12dp"
                 android:max="10"
                 android:progress="0"
-                android:progressTint="#287A5A"/>
+                android:progressTint="@color/sh_primary"/>
 
             <TextView
                 android:id="@+id/txtDetalleObjeto"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Reconocimiento del objeto por la IA y condición declarada."
-                android:textColor="#718096"
+                android:textColor="@color/text_secondary"
                 android:textSize="13sp"
                 android:layout_marginTop="8dp"/>
 
@@ -148,7 +150,7 @@
             android:orientation="vertical"
             android:padding="18dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/bg_card">
+            android:background="@drawable/bg_coral_soft">
 
             <TextView
                 android:id="@+id/txtResultado"
@@ -157,7 +159,7 @@
                 android:text="Esperando evaluación"
                 android:textSize="19sp"
                 android:textStyle="bold"
-                android:textColor="#287A5A"
+                android:textColor="@color/text_primary"
                 android:gravity="center"/>
 
             <TextView
@@ -166,7 +168,7 @@
                 android:layout_height="wrap_content"
                 android:text="El resultado aparecerá después del análisis."
                 android:textSize="14sp"
-                android:textColor="#52645A"
+                android:textColor="@color/text_secondary"
                 android:gravity="center"
                 android:layout_marginTop="10dp"/>
 
@@ -187,8 +189,8 @@
                 android:layout_weight="1"
                 android:text="Retornar"
                 android:textAllCaps="false"
-                android:textColor="#FFFFFF"
-                android:background="@drawable/bg_input"
+                android:textColor="@color/sh_primary"
+                android:background="@drawable/bg_button_outline"
                 android:backgroundTint="@null"/>
 
             <Button

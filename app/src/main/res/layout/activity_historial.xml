@@ -1,10 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/historialScreen"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F8F6"
+    android:background="@color/background"
     android:padding="18dp">
 
     <!-- ENCABEZADO -->
@@ -18,9 +20,10 @@
             android:id="@+id/btnVolverHistorial"
             android:layout_width="45dp"
             android:layout_height="45dp"
-            android:src="@android:drawable/ic_media_previous"
+            android:src="@drawable/ic_back"
             android:background="@android:color/transparent"
-            android:tint="#287A5A"
+            android:tint="@color/sh_primary"
+            tools:ignore="UseAppTint"
             android:contentDescription="Volver"/>
 
         <TextView
@@ -28,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Mi historial"
-            android:textColor="#287A5A"
+            android:textColor="@color/text_primary"
             android:textSize="24sp"
             android:textStyle="bold"/>
 
@@ -48,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Donaciones realizadas"
-            android:textColor="#718096"
+            android:textColor="@color/text_secondary"
             android:textSize="13sp"/>
 
         <TextView
@@ -56,7 +59,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="0 donaciones"
-            android:textColor="#287A5A"
+            android:textColor="@color/sh_primary"
             android:textSize="23sp"
             android:textStyle="bold"/>
 
@@ -69,7 +72,7 @@
         android:text="Mis donaciones"
         android:textSize="19sp"
         android:textStyle="bold"
-        android:textColor="#263C50"
+        android:textColor="@color/text_primary"
         android:layout_marginTop="25dp"
         android:layout_marginBottom="12dp"/>
 
@@ -106,14 +109,15 @@
                 android:layout_width="85dp"
                 android:layout_height="85dp"
                 android:src="@android:drawable/ic_menu_recent_history"
-                android:tint="#287A5A"
+                android:tint="@color/sh_primary"
+                tools:ignore="UseAppTint"
                 android:contentDescription="Historial vacío"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Todavía no tienes donaciones"
-                android:textColor="#287A5A"
+                android:textColor="@color/text_primary"
                 android:textSize="18sp"
                 android:textStyle="bold"
                 android:gravity="center"
@@ -123,7 +127,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Tus donaciones aparecerán aquí."
-                android:textColor="#718096"
+                android:textColor="@color/text_secondary"
                 android:textSize="14sp"
                 android:gravity="center"
                 android:layout_marginTop="8dp"/>

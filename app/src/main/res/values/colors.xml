@@ -1,22 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="sh_primary">#008080</color>
-    <color name="sh_primary_dark">#005C5C</color>
-    <color name="sh_primary_light">#26A69A</color>
-    <color name="sh_primary_soft">#E0F2F1</color>
-    <color name="sh_secondary">#4DB6AC</color>
-    <color name="sh_accent">#00BFA5</color>
-    <color name="sh_text">#103B38</color>
-    <color name="sh_text_secondary">#455A64</color>
-    <color name="primary">#008080</color>
-    <color name="primary_dark">#005C5C</color>
-    <color name="background">#F4F8F8</color>
+    <color name="sh_primary">#0B8E83</color>
+    <color name="sh_primary_dark">#075D5B</color>
+    <color name="sh_primary_light">#3FB2A5</color>
+    <color name="sh_primary_soft">#DDF2EE</color>
+    <color name="sh_secondary">#67C7BB</color>
+    <color name="sh_accent">#FFA726</color>
+    <color name="sh_coral">#FF7355</color>
+    <color name="sh_coral_dark">#F45A3A</color>
+    <color name="sh_coral_soft">#FFE8DE</color>
+    <color name="sh_text">#102B32</color>
+    <color name="sh_text_secondary">#586A6E</color>
+    <color name="primary">#0B8E83</color>
+    <color name="primary_dark">#075D5B</color>
+    <color name="background">#FFF9F3</color>
     <color name="white">#FFFFFF</color>
-    <color name="text_primary">#103B38</color>
-    <color name="text_secondary">#607D8B</color>
-    <color name="input_border">#B2DFDB</color>
-    <color name="avatar_background">#E0F2F1</color>
+    <color name="text_primary">#102B32</color>
+    <color name="text_secondary">#586A6E</color>
+    <color name="input_border">#AEBDBF</color>
+    <color name="avatar_background">#DDF2EE</color>
     <color name="card_bg">#FFFFFF</color>
+    <color name="surface_muted">#F2F6F3</color>
+    <color name="divider">#E6E8E4</color>
+    <color name="nav_selected">#D9F0EC</color>
+    <color name="peach">#FFE5D2</color>
     <color name="badge_pending">#FEF3C7</color>
     <color name="badge_pending_text">#B45309</color>
     <!-- NUEVOS: texto de los campos -->

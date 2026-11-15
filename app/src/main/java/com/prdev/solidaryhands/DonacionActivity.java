@@ -93,6 +93,7 @@ public class DonacionActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_donacion);
+        UiInsets.aplicar(this, R.id.donacionHeader, R.id.contenedorPasos, true, true);
 
         contenedorPasos = findViewById(R.id.contenedorPasos);
         txtNumeroPaso = findViewById(R.id.txtNumeroPaso);
@@ -119,13 +120,13 @@ public class DonacionActivity extends Activity {
 
         pasoActual = numero;
 
-        txtNumeroPaso.setText(numero + " de 3");
+        txtNumeroPaso.setText("Paso " + numero + " de 3");
 
         LinearLayout.LayoutParams params =
                 (LinearLayout.LayoutParams) progreso.getLayoutParams();
 
         params.width = (int) (getResources()
-                .getDisplayMetrics().widthPixels * numero / 3.0);
+                .getDisplayMetrics().widthPixels * 0.86 * numero / 3.0);
 
         progreso.setLayoutParams(params);
 
@@ -624,7 +625,7 @@ public class DonacionActivity extends Activity {
         if (r.nivel == 2) {
 
             txtResultado.setText("¡Aprobado para donación!");
-            txtResultado.setTextColor(Color.parseColor("#287A5A"));
+            txtResultado.setTextColor(Color.parseColor("#0B8E83"));
             txtMensajeResultado.setText(
                     "Puntuación final: " + puntajeFinal
                             + ". Tu producto cumple con las condiciones requeridas.");

@@ -5,25 +5,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="#F5F8F6">
+    android:background="@color/background">
 
     <!-- BARRA SUPERIOR -->
     <LinearLayout
+        android:id="@+id/perfilHeader"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
+        android:layout_height="wrap_content"
+        android:minHeight="56dp"
         android:orientation="horizontal"
         android:gravity="center_vertical"
         android:paddingHorizontal="16dp"
-        android:background="@color/sh_primary"
-        android:elevation="4dp">
+        android:background="@color/background">
 
         <ImageButton
             android:id="@+id/btnVolverPerfil"
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@android:color/transparent"
-            android:src="@android:drawable/ic_media_previous"
-            app:tint="@color/white"
+            android:src="@drawable/ic_back"
             android:contentDescription="Volver"/>
 
         <TextView
@@ -31,14 +31,15 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Mi Perfil"
-            android:textColor="@color/white"
-            android:textSize="20sp"
+            android:textColor="@color/text_primary"
+            android:textSize="23sp"
             android:textStyle="bold"
             android:layout_marginStart="8dp"/>
 
     </LinearLayout>
 
     <ScrollView
+        android:id="@+id/perfilScroll"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -63,7 +64,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:background="@drawable/bg_avatar"
-                    android:backgroundTint="#E4F1E9"
+                    android:backgroundTint="@color/sh_primary_soft"
                     android:padding="22dp"
                     android:src="@drawable/ic_perfil"
                     app:tint="@color/sh_primary"
@@ -75,7 +76,7 @@
                 android:id="@+id/progresoPerfil"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminateTint="#287A5A"
+                android:indeterminateTint="@color/sh_primary"
                 android:visibility="gone"/>
 
             <!-- TARJETA DE DATOS DEL USUARIO (SUPABASE) -->
@@ -92,7 +93,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Nombre Completo"
-                    android:textColor="#718096"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp"
                     android:textStyle="bold"/>
 
@@ -101,7 +102,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Cargando nombre..."
-                    android:textColor="#263C50"
+                    android:textColor="@color/text_primary"
                     android:textSize="17sp"
                     android:textStyle="bold"
                     android:layout_marginTop="3dp"/>
@@ -109,7 +110,7 @@
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#EDF2F7"
+                    android:background="@color/divider"
                     android:layout_marginVertical="12dp"/>
 
                 <!-- CORREO ELECTRÓNICO -->
@@ -117,7 +118,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Correo Electrónico"
-                    android:textColor="#718096"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp"
                     android:textStyle="bold"/>
 
@@ -126,14 +127,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="cargando@correo.com"
-                    android:textColor="#263C50"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:layout_marginTop="3dp"/>
 
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    android:background="#EDF2F7"
+                    android:background="@color/divider"
                     android:layout_marginVertical="12dp"/>
 
                 <!-- TELÉFONO -->
@@ -141,7 +142,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Teléfono / Contacto"
-                    android:textColor="#718096"
+                    android:textColor="@color/text_secondary"
                     android:textSize="12sp"
                     android:textStyle="bold"/>
 
@@ -150,7 +151,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Sin teléfono registrado"
-                    android:textColor="#263C50"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:layout_marginTop="3dp"/>
 
@@ -161,7 +162,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Accesos rápidos"
-                android:textColor="#263C50"
+                android:textColor="@color/text_primary"
                 android:textSize="16sp"
                 android:textStyle="bold"
                 android:layout_marginTop="26dp"
@@ -192,7 +193,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Fundaciones Aliadas"
-                    android:textColor="#263C50"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginStart="14dp"/>
@@ -201,7 +202,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="➔"
-                    android:textColor="#718096"
+                    android:textColor="@color/text_secondary"
                     android:textSize="16sp"/>
 
             </LinearLayout>
@@ -232,7 +233,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Historial de Donaciones"
-                    android:textColor="#263C50"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginStart="14dp"/>
@@ -241,7 +242,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="➔"
-                    android:textColor="#718096"
+                    android:textColor="@color/text_secondary"
                     android:textSize="16sp"/>
 
             </LinearLayout>
@@ -272,7 +273,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Configuración de la Cuenta"
-                    android:textColor="#263C50"
+                    android:textColor="@color/text_primary"
                     android:textSize="15sp"
                     android:textStyle="bold"
                     android:layout_marginStart="14dp"/>
@@ -281,7 +282,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="➔"
-                    android:textColor="#718096"
+                    android:textColor="@color/text_secondary"
                     android:textSize="16sp"/>
 
             </LinearLayout>
@@ -294,9 +295,9 @@
                 android:layout_marginTop="32dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/bg_input"
-                android:backgroundTint="#F8D7DA"
+                android:backgroundTint="@color/sh_coral_soft"
                 android:text="Cerrar Sesión"
-                android:textColor="#721C24"
+                android:textColor="#9A3412"
                 android:textStyle="bold"
                 android:textSize="15sp"
                 android:textAllCaps="false"/>

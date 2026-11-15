@@ -3,45 +3,45 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F5F8F6"
+    android:background="@drawable/bg_auth"
     android:fillViewport="true">
 
     <LinearLayout
+        android:id="@+id/registroContent"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_horizontal"
-        android:padding="28dp">
+        android:paddingHorizontal="24dp"
+        android:paddingTop="32dp"
+        android:paddingBottom="28dp">
 
         <!-- TITULO -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Solidaryhands"
-            android:textSize="28sp"
+            android:text="Manos Solidarias"
+            android:textSize="26sp"
             android:textStyle="bold"
-            android:textColor="#287A5A"/>
+            android:textColor="@color/sh_primary_dark"/>
 
         <!-- ICONO -->
         <ImageView
-            android:layout_width="75dp"
-            android:layout_height="75dp"
+            android:layout_width="80dp"
+            android:layout_height="80dp"
             android:layout_marginTop="15dp"
-            android:background="@drawable/bg_avatar"
-            android:backgroundTint="#DCEFE4"
-            android:padding="18dp"
-            android:src="@android:drawable/ic_menu_myplaces"
-            android:tint="#287A5A"
+            android:padding="8dp"
+            android:src="@drawable/manos_solidarias_mark"
             android:contentDescription="Icono de registro"/>
 
         <!-- TITULO REGISTRO -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="REGISTRO"
-            android:textSize="22sp"
+            android:text="Crea tu cuenta"
+            android:textSize="24sp"
             android:textStyle="bold"
-            android:textColor="#287A5A"
+            android:textColor="@color/sh_primary_dark"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="20dp"/>
 
@@ -50,7 +50,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Nombre"
-            android:textColor="#263C50"
+            android:textColor="@color/text_primary"
             android:textStyle="bold"
             android:textSize="14sp"/>
 
@@ -70,7 +70,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Apellido paterno"
-            android:textColor="#263C50"
+            android:textColor="@color/text_primary"
             android:textStyle="bold"
             android:textSize="14sp"
             android:layout_marginTop="12dp"/>
@@ -93,7 +93,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Apellido materno"
-            android:textColor="#263C50"
+            android:textColor="@color/text_primary"
             android:textStyle="bold"
             android:textSize="14sp"
             android:layout_marginTop="12dp"/>
@@ -116,7 +116,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Teléfono"
-            android:textColor="#263C50"
+            android:textColor="@color/text_primary"
             android:textStyle="bold"
             android:textSize="14sp"
             android:layout_marginTop="12dp"/>
@@ -140,7 +140,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Correo electrónico"
-            android:textColor="#263C50"
+            android:textColor="@color/text_primary"
             android:textStyle="bold"
             android:textSize="14sp"
             android:layout_marginTop="12dp"/>
@@ -163,7 +163,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Contraseña"
-            android:textColor="#263C50"
+            android:textColor="@color/text_primary"
             android:textStyle="bold"
             android:textSize="14sp"
             android:layout_marginTop="12dp"/>
@@ -190,7 +190,7 @@
             android:layout_marginBottom="20dp"
             android:background="@drawable/bg_button"
             android:backgroundTint="@null"
-            android:text="Registrar"
+            android:text="Crear cuenta"
             android:textColor="#FFFFFF"
             android:textStyle="bold"
             android:textSize="15sp"

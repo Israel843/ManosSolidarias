@@ -42,6 +42,7 @@ public class FundacionActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fundacion);
+        UiInsets.aplicar(this, R.id.fundacionHeader, R.id.fundacionBottomNav, true, true);
 
         // CONECTAR ELEMENTOS XML
         txtNombreFundacion = findViewById(R.id.txtNombreFundacion);
@@ -78,6 +79,8 @@ public class FundacionActivity extends Activity {
 
         // BOTON VOLVER
         findViewById(R.id.btnVolverFundacion).setOnClickListener(v -> finish());
+        findViewById(R.id.btnDonarFundacion).setOnClickListener(v ->
+                startActivity(new Intent(FundacionActivity.this, DonacionActivity.class)));
 
         // BOTONES INFERIORES (antes no tenían ninguna acción)
         btnNovedades.setOnClickListener(v -> mostrarTab(TAB_NOVEDADES));
@@ -109,7 +112,7 @@ public class FundacionActivity extends Activity {
         if (lista.isEmpty()) {
             TextView vacio = new TextView(this);
             vacio.setText("Aún no hay información en esta sección.");
-            vacio.setTextColor(Color.parseColor("#52645A"));
+            vacio.setTextColor(Color.parseColor("#586A6E"));
             vacio.setTextSize(14f);
             vacio.setPadding(0, 40, 0, 0);
             contenedorContenido.addView(vacio);
@@ -126,8 +129,8 @@ public class FundacionActivity extends Activity {
 
     private void marcarBoton(Button boton, boolean activo) {
         boton.setBackgroundTintList(ColorStateList.valueOf(
-                Color.parseColor(activo ? "#E4F2EA" : "#FFFFFF")));
-        boton.setTextColor(Color.parseColor(activo ? "#287A5A" : "#52645A"));
+                Color.parseColor(activo ? "#DDF2EE" : "#FFFFFF")));
+        boton.setTextColor(Color.parseColor(activo ? "#0B8E83" : "#586A6E"));
     }
 
     private void llenarTarjeta(View tarjeta, FundacionContenido.Entrada entrada) {
