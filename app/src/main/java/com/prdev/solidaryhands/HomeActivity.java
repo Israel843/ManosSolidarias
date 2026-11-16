@@ -36,7 +36,7 @@ public class HomeActivity extends AppCompatActivity {
     // VISTAS PRINCIPALES
     private DrawerLayout drawerLayout;
     private NavigationView navView;
-    private Button btnDonar, btnHistorial;
+    private Button btnDonar, btnHistorial, btnNecesidades;
     private ImageButton btnMenu, btnPerfil;
     private EditText edtBuscar;
     private TextView txtSaludo;
@@ -64,6 +64,7 @@ public class HomeActivity extends AppCompatActivity {
         navView = findViewById(R.id.navView);
         btnDonar = findViewById(R.id.btnDonar);
         btnHistorial = findViewById(R.id.btnHistorial);
+        btnNecesidades = findViewById(R.id.btnNecesidades);
         btnMenu = findViewById(R.id.btnMenu);
         btnPerfil = findViewById(R.id.btnPerfil);
         edtBuscar = findViewById(R.id.edtBuscar);
@@ -95,6 +96,9 @@ public class HomeActivity extends AppCompatActivity {
             Intent intent = new Intent(HomeActivity.this, HistorialActivity.class);
             startActivity(intent);
         });
+
+        btnNecesidades.setOnClickListener(v ->
+                startActivity(new Intent(HomeActivity.this, NecesidadesActivity.class)));
 
         btnMenu.setOnClickListener(v -> {
             if (drawerLayout != null) {
@@ -209,7 +213,7 @@ public class HomeActivity extends AppCompatActivity {
         if (progresoFundaciones != null) progresoFundaciones.setVisibility(View.VISIBLE);
         if (txtSinFundaciones != null) txtSinFundaciones.setVisibility(View.GONE);
 
-        SupabaseClient.getInstance(this).getDbService().getFoundations()
+        SupabaseClient.getInstance(this).getDbService().getFundaciones()
                 .enqueue(new Callback<List<Fundacion>>() {
                     @Override
                     public void onResponse(Call<List<Fundacion>> call, Response<List<Fundacion>> response) {

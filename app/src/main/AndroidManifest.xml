@@ -49,6 +49,12 @@
         <activity
             android:name=".PerfilActivity"
             android:exported="false"/>
+        <activity
+            android:name=".NecesidadesActivity"
+            android:exported="false"/>
+        <activity
+            android:name=".PanelFundacionActivity"
+            android:exported="false"/>
 
         <!-- NUEVO: escáner / cámara dentro de la app -->
         <activity

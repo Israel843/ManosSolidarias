@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
+        android:paddingHorizontal="24dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="24dp">
+
+        <ImageView
+            android:layout_width="105dp"
+            android:layout_height="95dp"
+            android:contentDescription="Manos Solidarias"
+            android:scaleType="centerCrop"
+            android:src="@drawable/manos_solidarias_mark" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:text="¿Cómo quieres participar?"
+            android:textColor="@color/text_primary"
+            android:textSize="25sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="7dp"
+            android:gravity="center"
+            android:text="Selecciona el tipo de cuenta que deseas crear."
+            android:textColor="@color/text_secondary"
+            android:textSize="14sp" />
+
+        <RadioGroup
+            android:id="@+id/grupoRol"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="28dp"
+            android:orientation="vertical">
+
+            <RadioButton
+                android:id="@+id/radioDonante"
+                android:layout_width="match_parent"
+                android:layout_height="82dp"
+                android:background="@drawable/bg_card"
+                android:buttonTint="@color/sh_primary"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="18dp"
+                android:text="Donante\nQuiero ofrecer objetos y ayudar"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp" />
+
+            <RadioButton
+                android:id="@+id/radioFundacion"
+                android:layout_width="match_parent"
+                android:layout_height="82dp"
+                android:layout_marginTop="12dp"
+                android:background="@drawable/bg_card"
+                android:buttonTint="@color/sh_primary"
+                android:gravity="center_vertical"
+                android:paddingHorizontal="18dp"
+                android:text="Fundación\nQuiero publicar necesidades y recibir ayuda"
+                android:textColor="@color/text_primary"
+                android:textSize="16sp" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btnSiguienteRol"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="28dp"
+            android:background="@drawable/bg_button"
+            android:backgroundTint="@color/sh_primary"
+            android:text="Siguiente"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</ScrollView>

@@ -14,6 +14,10 @@ import android.graphics.Color;
 
 import com.prdev.solidaryhands.ai.DonationScorer;
 import com.prdev.solidaryhands.ai.ScoreResult;
+import com.prdev.solidaryhands.models.EstadoDonacion;
+import com.prdev.solidaryhands.models.DonacionSupabase;
+import com.prdev.solidaryhands.models.Fundacion;
+import com.prdev.solidaryhands.models.Necesidad;
 import com.prdev.solidaryhands.network.SessionManager;
 import com.prdev.solidaryhands.network.SupabaseClient;
 import com.prdev.solidaryhands.util.ImagenUtil;
@@ -22,8 +26,10 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,6 +55,11 @@ public class DonacionActivity extends Activity {
     private Spinner spnCondicion;
     private Spinner spnEntrega;
     private Spinner spnFundacion;
+    private TextView txtCoincidenciaFundacion;
+    private final List<Necesidad> necesidadesActivas = new ArrayList<>();
+    private final List<Fundacion> fundacionesDisponibles = new ArrayList<>();
+    private long fundacionId = -1L;
+    private long necesidadId = -1L;
 
     // DATOS DEL OBJETO
     private String tipo, descripcion, cantidad;
@@ -101,6 +112,11 @@ public class DonacionActivity extends Activity {
 
         findViewById(R.id.btnVolver).setOnClickListener(v -> finish());
 
+        categoria = getIntent().getStringExtra("categoriaSugerida");
+        fundacion = getIntent().getStringExtra("fundacionSugerida");
+        fundacionId = getIntent().getLongExtra("fundacionIdSugerida", -1L);
+        necesidadId = getIntent().getLongExtra("necesidadIdSugerida", -1L);
+
         scorer = new DonationScorer(this);
 
         mostrarPaso1();
@@ -152,6 +168,7 @@ public class DonacionActivity extends Activity {
         spnCondicion = vista.findViewById(R.id.spnCondicion);
         spnEntrega = vista.findViewById(R.id.spnEntrega);
         spnFundacion = vista.findViewById(R.id.spnFundacion);
+        txtCoincidenciaFundacion = vista.findViewById(R.id.txtCoincidenciaFundacion);
 
         configurarSpinner(spnCategoria, new String[]{
                 "Seleccionar categoría",
@@ -195,6 +212,18 @@ public class DonacionActivity extends Activity {
                 "World Vision Bolivia"
         });
 
+        spnCategoria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                actualizarFundacionesRecomendadas(String.valueOf(parent.getItemAtPosition(position)));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
+
+        cargarNecesidadesParaCoincidencias();
+
         // RESTAURAR DATOS
         if (tipo != null) edtTipoObjeto.setText(tipo);
         if (descripcion != null) edtDescripcion.setText(descripcion);
@@ -214,6 +243,89 @@ public class DonacionActivity extends Activity {
                     guardarDatos();
 
                     mostrarPaso2();
+                });
+    }
+
+    private void actualizarFundacionesRecomendadas(String categoriaElegida) {
+        if (spnFundacion == null) return;
+
+        String seleccionActual = fundacion;
+        if (spnFundacion.getSelectedItem() != null
+                && !String.valueOf(spnFundacion.getSelectedItem()).startsWith("Seleccionar")) {
+            seleccionActual = String.valueOf(spnFundacion.getSelectedItem());
+        }
+
+        Set<String> nombres = new LinkedHashSet<>();
+        int coincidencias = 0;
+        for (Necesidad necesidad : NecesidadesRepositorio.ordenar(necesidadesActivas, categoriaElegida)) {
+            if (necesidad.getCategoria().equalsIgnoreCase(categoriaElegida)) {
+                nombres.add(necesidad.getFundacion());
+                coincidencias++;
+            }
+        }
+        nombres.add("Fundación Alalay");
+        nombres.add("Fundación Pallini");
+        nombres.add("World Vision Bolivia");
+        for (Fundacion fundacionDisponible : fundacionesDisponibles) {
+            nombres.add(fundacionDisponible.getNombre());
+        }
+
+        List<String> opciones = new ArrayList<>();
+        opciones.add("Seleccionar fundación");
+        opciones.addAll(nombres);
+        configurarSpinner(spnFundacion, opciones.toArray(new String[0]));
+        seleccionarSpinner(spnFundacion, seleccionActual);
+
+        if (txtCoincidenciaFundacion != null) {
+            txtCoincidenciaFundacion.setText(coincidencias > 0
+                    ? coincidencias + (coincidencias == 1 ? " necesidad coincide" : " necesidades coinciden")
+                        + " con esta categoría. Las fundaciones recomendadas aparecen primero."
+                    : "No hay una necesidad exacta publicada; puedes elegir cualquier fundación.");
+        }
+    }
+
+    private void cargarNecesidadesParaCoincidencias() {
+        SupabaseClient.getInstance(this).getDbService()
+                .getNecesidadesActivas("*,fundacion:fundaciones(nombre)", "eq.ACTIVA")
+                .enqueue(new Callback<List<Necesidad>>() {
+                    @Override
+                    public void onResponse(Call<List<Necesidad>> call,
+                                           Response<List<Necesidad>> response) {
+                        if (!response.isSuccessful() || response.body() == null) return;
+                        necesidadesActivas.clear();
+                        necesidadesActivas.addAll(response.body());
+                        if (pasoActual == 1 && spnCategoria != null
+                                && spnCategoria.getSelectedItem() != null) {
+                            actualizarFundacionesRecomendadas(
+                                    String.valueOf(spnCategoria.getSelectedItem()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Necesidad>> call, Throwable throwable) {
+                        // El formulario sigue disponible aunque no haya conexión para recomendar.
+                    }
+                });
+
+        SupabaseClient.getInstance(this).getDbService().getFundaciones()
+                .enqueue(new Callback<List<Fundacion>>() {
+                    @Override
+                    public void onResponse(Call<List<Fundacion>> call,
+                                           Response<List<Fundacion>> response) {
+                        if (!response.isSuccessful() || response.body() == null) return;
+                        fundacionesDisponibles.clear();
+                        fundacionesDisponibles.addAll(response.body());
+                        if (pasoActual == 1 && spnCategoria != null
+                                && spnCategoria.getSelectedItem() != null) {
+                            actualizarFundacionesRecomendadas(
+                                    String.valueOf(spnCategoria.getSelectedItem()));
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Fundacion>> call, Throwable throwable) {
+                        // Se conserva el catálogo visible como respaldo.
+                    }
                 });
     }
 
@@ -310,6 +422,20 @@ public class DonacionActivity extends Activity {
         condicion = spnCondicion.getSelectedItem().toString();
         entrega = spnEntrega.getSelectedItem().toString();
         fundacion = spnFundacion.getSelectedItem().toString();
+        long idEncontrado = buscarFundacionId(fundacion);
+        if (idEncontrado > 0) {
+            if (fundacionId != idEncontrado) necesidadId = -1L;
+            fundacionId = idEncontrado;
+        }
+    }
+
+    private long buscarFundacionId(String nombre) {
+        for (Fundacion item : fundacionesDisponibles) {
+            if (item.getId() != null && item.getNombre().equalsIgnoreCase(nombre)) {
+                return item.getId();
+            }
+        }
+        return -1L;
     }
 
     // PASO 2: FOTOGRAFIA
@@ -679,7 +805,7 @@ public class DonacionActivity extends Activity {
         String userId = SessionManager
                 .getInstance(DonacionActivity.this).getUserId();
 
-        Donacion nuevaDonacion = new Donacion(
+        Donacion nuevaDonacionLocal = new Donacion(
                 userId,
                 tipo,
                 categoria,
@@ -690,46 +816,51 @@ public class DonacionActivity extends Activity {
                 entrega,
                 fundacion,
                 fecha,
-                "Pendiente de revisión"
+                EstadoDonacion.ENVIADA
         );
-        DonacionesRepositorio.agregar(nuevaDonacion);
 
-        final Context appContext = getApplicationContext();
-
-        if (userId != null && !userId.isEmpty() && !"demo_user".equals(userId)) {
-            SupabaseClient.getInstance(DonacionActivity.this)
-                    .getDbService().insertDonation("return=minimal", nuevaDonacion)
-                    .enqueue(new Callback<Void>() {
-                        @Override
-                        public void onResponse(Call<Void> call, Response<Void> response) {
-                            if (!response.isSuccessful()) {
-                                Toast.makeText(appContext,
-                                        "La donación no se pudo guardar en la nube (código "
-                                                + response.code() + ").",
-                                        Toast.LENGTH_LONG).show();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(Call<Void> call, Throwable t) {
-                            Toast.makeText(appContext,
-                                    "Sin conexión: la donación quedó solo en este teléfono.",
-                                    Toast.LENGTH_LONG).show();
-                        }
-                    });
+        if (userId == null || userId.isEmpty() || "demo_user".equals(userId)
+                || fundacionId < 0) {
+            DonacionesRepositorio.agregar(this, nuevaDonacionLocal);
+            finalizarDonacion("Donación guardada en este teléfono. Conéctate para sincronizarla.");
+            return;
         }
 
-        Toast.makeText(this,
-                "Donación registrada correctamente.",
-                Toast.LENGTH_LONG).show();
+        double cantidadNumero = Double.parseDouble(cantidad);
+        Double puntaje = ultimoResultado != null
+                ? (double) ultimoResultado.puntuacionFinal : null;
+        DonacionSupabase nuevaDonacion = new DonacionSupabase(
+                userId, fundacionId, necesidadId > 0 ? necesidadId : null,
+                tipo, categoria, descripcionFinal, cantidadNumero, unidad,
+                condicion, entrega, puntaje, EstadoDonacion.ENVIADA);
 
-        // Abrir historial
-        Intent intent = new Intent(
-                DonacionActivity.this,
-                HistorialActivity.class
-        );
+        btnContinuar3.setEnabled(false);
+        btnContinuar3.setText("Enviando donación...");
+        SupabaseClient.getInstance(this).getDbService()
+                .insertDonacion("return=representation", nuevaDonacion)
+                .enqueue(new Callback<List<DonacionSupabase>>() {
+                    @Override
+                    public void onResponse(Call<List<DonacionSupabase>> call,
+                                           Response<List<DonacionSupabase>> response) {
+                        if (response.isSuccessful()) {
+                            finalizarDonacion("Donación enviada correctamente a " + fundacion + ".");
+                        } else {
+                            DonacionesRepositorio.agregar(DonacionActivity.this, nuevaDonacionLocal);
+                            finalizarDonacion("Supabase no respondió. La donación quedó guardada localmente.");
+                        }
+                    }
 
-        startActivity(intent);
+                    @Override
+                    public void onFailure(Call<List<DonacionSupabase>> call, Throwable throwable) {
+                        DonacionesRepositorio.agregar(DonacionActivity.this, nuevaDonacionLocal);
+                        finalizarDonacion("Sin conexión. La donación quedó guardada localmente.");
+                    }
+                });
+    }
+
+    private void finalizarDonacion(String mensaje) {
+        Toast.makeText(this, mensaje, Toast.LENGTH_LONG).show();
+        startActivity(new Intent(this, HistorialActivity.class));
         finish();
     }
 }

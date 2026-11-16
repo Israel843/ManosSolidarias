@@ -12,6 +12,8 @@ import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.prdev.solidaryhands.models.Donacion;
+import com.prdev.solidaryhands.models.DonacionSupabase;
+import com.prdev.solidaryhands.models.EstadoDonacion;
 import com.prdev.solidaryhands.network.SessionManager;
 import com.prdev.solidaryhands.network.SupabaseClient;
 
@@ -59,34 +61,40 @@ public class HistorialActivity extends AppCompatActivity {
 
         // Si no hay usuario logueado o estamos en modo local de demostración
         if (userId == null || userId.isEmpty() || com.prdev.solidaryhands.network.SupabaseConfig.SUPABASE_URL.contains("TU_PROYECTO")) {
-            mostrarLista(DonacionesRepositorio.obtenerTodas());
+            mostrarLista(DonacionesRepositorio.obtenerTodas(this));
             return;
         }
 
         // Consultar desde Supabase
-        SupabaseClient.getInstance(this).getDbService().getDonations("eq." + userId)
-                .enqueue(new Callback<List<Donacion>>() {
+        SupabaseClient.getInstance(this).getDbService()
+                .getDonacionesDonante("*,fundacion:fundaciones(nombre)",
+                        "eq." + userId, "fecha_registro.desc")
+                .enqueue(new Callback<List<DonacionSupabase>>() {
                     @Override
-                    public void onResponse(Call<List<Donacion>> call, Response<List<Donacion>> response) {
+                    public void onResponse(Call<List<DonacionSupabase>> call,
+                                           Response<List<DonacionSupabase>> response) {
                         if (response.isSuccessful() && response.body() != null) {
-                            List<Donacion> listaSupabase = response.body();
+                            List<Donacion> listaSupabase = new ArrayList<>();
+                            for (DonacionSupabase item : response.body()) {
+                                listaSupabase.add(item.toDonacion());
+                            }
                             // También sumamos donaciones locales si las hubiera
                             List<Donacion> listaFinal = new ArrayList<>(listaSupabase);
-                            for (Donacion d : DonacionesRepositorio.obtenerTodas()) {
+                            for (Donacion d : DonacionesRepositorio.obtenerTodas(HistorialActivity.this)) {
                                 if (!contieneDonacion(listaFinal, d)) {
                                     listaFinal.add(0, d);
                                 }
                             }
                             mostrarLista(listaFinal);
                         } else {
-                            mostrarLista(DonacionesRepositorio.obtenerTodas());
+                            mostrarLista(DonacionesRepositorio.obtenerTodas(HistorialActivity.this));
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<List<Donacion>> call, Throwable t) {
+                    public void onFailure(Call<List<DonacionSupabase>> call, Throwable t) {
                         // En caso de fallo de red, mostrar datos locales
-                        mostrarLista(DonacionesRepositorio.obtenerTodas());
+                        mostrarLista(DonacionesRepositorio.obtenerTodas(HistorialActivity.this));
                     }
                 });
     }
@@ -151,7 +159,7 @@ public class HistorialActivity extends AppCompatActivity {
         TextView estado = crearTexto(
                 d.getEstado(),
                 12,
-                "#9A6700",
+                colorEstado(d.getEstado()),
                 true
         );
         encabezado.addView(estado);
@@ -196,5 +204,12 @@ public class HistorialActivity extends AppCompatActivity {
 
     private int dp(int valor) {
         return (int) (valor * getResources().getDisplayMetrics().density);
+    }
+
+    private String colorEstado(String estado) {
+        if (EstadoDonacion.ACEPTADA.equals(estado)) return "#0B8E83";
+        if (EstadoDonacion.RECHAZADA.equals(estado)) return "#C53030";
+        if (EstadoDonacion.EN_REVISION.equals(estado)) return "#F45A3A";
+        return "#9A6700";
     }
 }

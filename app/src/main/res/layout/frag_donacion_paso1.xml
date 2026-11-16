@@ -169,6 +169,17 @@
             android:layout_marginTop="7dp"
             android:padding="8dp"/>
 
+        <TextView
+            android:id="@+id/txtCoincidenciaFundacion"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:background="@drawable/bg_surface_soft"
+            android:padding="12dp"
+            android:text="Selecciona una categoría para recomendar fundaciones."
+            android:textColor="@color/sh_primary_dark"
+            android:textSize="12sp" />
+
         <Button
             android:id="@+id/btnSiguiente1"
             android:layout_width="match_parent"

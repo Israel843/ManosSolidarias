@@ -16,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.prdev.solidaryhands.models.AuthRequest;
 import com.prdev.solidaryhands.models.AuthResponse;
 import com.prdev.solidaryhands.models.Perfil;
+import com.prdev.solidaryhands.models.RolUsuario;
 import com.prdev.solidaryhands.models.User;
 import com.prdev.solidaryhands.network.SessionManager;
 import com.prdev.solidaryhands.network.SupabaseClient;
@@ -119,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
         if (SupabaseConfig.SUPABASE_URL.contains("TU_PROYECTO")) {
             Toast.makeText(MainActivity.this, "Iniciando sesión en modo demostración...", Toast.LENGTH_SHORT).show();
             sessionManager.saveSession("token_demo", "demo_user", correo, "Usuario Solidario", "+591 71234567");
+            sessionManager.updateUserRole(RolUsuario.DONANTE);
             irAHome();
             return;
         }
@@ -146,6 +148,8 @@ public class MainActivity extends AppCompatActivity {
                             // Intentar extraer nombre de metadata
                             String nombreInicial = "Usuario";
                             String telefonoInicial = "";
+                            String rolInicial = RolUsuario.DONANTE;
+                            String nombreFundacionInicial = "";
                             if (user != null && user.getUserMetadata() != null) {
                                 Map<String, Object> meta = user.getUserMetadata();
                                 String nom = meta.get("nombre") != null ? String.valueOf(meta.get("nombre")) : "";
@@ -158,10 +162,18 @@ public class MainActivity extends AppCompatActivity {
                                 if (meta.get("telefono") != null) {
                                     telefonoInicial = String.valueOf(meta.get("telefono"));
                                 }
+                                if (meta.get("rol") != null) {
+                                    rolInicial = RolUsuario.normalizar(String.valueOf(meta.get("rol")));
+                                }
+                                if (meta.get("nombre_fundacion") != null) {
+                                    nombreFundacionInicial = String.valueOf(meta.get("nombre_fundacion"));
+                                }
                             }
 
                             // Guardar sesión (y el refresh token para renovarla cuando venza)
                             sessionManager.saveSession(token, userId, userEmail, nombreInicial, telefonoInicial);
+                            sessionManager.updateUserRole(rolInicial);
+                            sessionManager.updateFoundationName(nombreFundacionInicial);
                             sessionManager.saveRefreshToken(authResp.getRefreshToken());
 
                             // Consultar perfil completo de Supabase en segundo plano
@@ -223,7 +235,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void irAHome() {
-        Intent intent = new Intent(MainActivity.this, HomeActivity.class);
+        Class<?> destino = sessionManager.isFoundation()
+                ? PanelFundacionActivity.class : HomeActivity.class;
+        Intent intent = new Intent(MainActivity.this, destino);
         startActivity(intent);
         finish();
     }

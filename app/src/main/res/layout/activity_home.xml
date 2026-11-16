@@ -66,6 +66,19 @@
                         android:layout_marginTop="14dp" android:background="@drawable/bg_surface_soft" android:backgroundTint="@null"
                         android:gravity="center" android:text="♡   Revisa el impacto de tus donaciones   →"
                         android:textAllCaps="false" android:textColor="@color/sh_primary_dark" android:textStyle="bold" />
+                    <Button
+                        android:id="@+id/btnNecesidades"
+                        android:layout_width="match_parent"
+                        android:layout_height="58dp"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/bg_coral_soft"
+                        android:backgroundTint="@null"
+                        android:gravity="center_vertical|start"
+                        android:paddingHorizontal="18dp"
+                        android:text="✦   Ver necesidades urgentes   →"
+                        android:textAllCaps="false"
+                        android:textColor="@color/sh_coral_dark"
+                        android:textStyle="bold" />
                     <TextView
                         android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="28dp"
                         android:text="Fundaciones cerca de ti" android:textColor="@color/text_primary"

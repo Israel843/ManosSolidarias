@@ -3,6 +3,8 @@ package com.prdev.solidaryhands.network;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.prdev.solidaryhands.models.RolUsuario;
+
 public class SessionManager {
     private static final String PREF_NAME = "SolidaryHandsSession";
     private static final String KEY_IS_LOGGED_IN = "isLoggedIn";
@@ -12,6 +14,9 @@ public class SessionManager {
     private static final String KEY_USER_EMAIL = "userEmail";
     private static final String KEY_USER_NAME = "userName";
     private static final String KEY_USER_PHONE = "userPhone";
+    private static final String KEY_USER_ROLE = "userRole";
+    private static final String KEY_FOUNDATION_NAME = "foundationName";
+    private static final String KEY_FOUNDATION_ID = "foundationId";
 
     private final SharedPreferences pref;
     private final SharedPreferences.Editor editor;
@@ -63,6 +68,17 @@ public class SessionManager {
         editor.apply();
     }
 
+    public void updateUserRole(String role) {
+        editor.putString(KEY_USER_ROLE, RolUsuario.normalizar(role));
+        editor.apply();
+    }
+
+    public void updateFoundationName(String foundationName) {
+        if (foundationName == null || foundationName.trim().isEmpty()) return;
+        editor.putString(KEY_FOUNDATION_NAME, foundationName.trim());
+        editor.apply();
+    }
+
     public boolean isLoggedIn() {
         return pref.getBoolean(KEY_IS_LOGGED_IN, false);
     }
@@ -89,6 +105,31 @@ public class SessionManager {
 
     public String getUserPhone() {
         return pref.getString(KEY_USER_PHONE, "");
+    }
+
+    public String getUserRole() {
+        return RolUsuario.normalizar(pref.getString(KEY_USER_ROLE, RolUsuario.DONANTE));
+    }
+
+    public boolean isFoundation() {
+        return RolUsuario.FUNDACION.equals(getUserRole());
+    }
+
+    public String getFoundationName() {
+        String foundationName = pref.getString(KEY_FOUNDATION_NAME, "");
+        if (foundationName == null || foundationName.trim().isEmpty()) {
+            return getUserName();
+        }
+        return foundationName;
+    }
+
+    public void updateFoundationId(long foundationId) {
+        editor.putLong(KEY_FOUNDATION_ID, foundationId);
+        editor.apply();
+    }
+
+    public long getFoundationId() {
+        return pref.getLong(KEY_FOUNDATION_ID, -1L);
     }
 
     public void clearSession() {

@@ -7,6 +7,9 @@ public class Fundacion implements Serializable {
     @SerializedName("id")
     private Long id;
 
+    @SerializedName("usuario_id")
+    private String usuarioId;
+
     @SerializedName("nombre")
     private String nombre;
 
@@ -15,6 +18,9 @@ public class Fundacion implements Serializable {
 
     @SerializedName("direccion")
     private String direccion;
+
+    @SerializedName("ciudad")
+    private String ciudad;
 
     @SerializedName("programas")
     private String programas;
@@ -25,7 +31,7 @@ public class Fundacion implements Serializable {
     @SerializedName("telefono")
     private String telefono;
 
-    @SerializedName("email")
+    @SerializedName(value = "correo", alternate = {"email"})
     private String email;
 
     public Fundacion() {}
@@ -51,6 +57,9 @@ public class Fundacion implements Serializable {
     public Long getId() { return id; }
     public void setId(Long id) { this.id = id; }
 
+    public String getUsuarioId() { return usuarioId; }
+    public void setUsuarioId(String usuarioId) { this.usuarioId = usuarioId; }
+
     public String getNombre() { return nombre != null ? nombre : ""; }
     public void setNombre(String nombre) { this.nombre = nombre; }
 
@@ -59,6 +68,9 @@ public class Fundacion implements Serializable {
 
     public String getDireccion() { return direccion != null ? direccion : ""; }
     public void setDireccion(String direccion) { this.direccion = direccion; }
+
+    public String getCiudad() { return ciudad != null ? ciudad : ""; }
+    public void setCiudad(String ciudad) { this.ciudad = ciudad; }
 
     public String getProgramas() { return programas != null ? programas : ""; }
     public void setProgramas(String programas) { this.programas = programas; }

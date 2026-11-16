@@ -3,14 +3,22 @@ package com.prdev.solidaryhands;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Patterns;
+import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
+import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.prdev.solidaryhands.models.AuthResponse;
 import com.prdev.solidaryhands.models.Perfil;
+import com.prdev.solidaryhands.models.RolUsuario;
 import com.prdev.solidaryhands.models.SignUpRequest;
 import com.prdev.solidaryhands.models.User;
 import com.prdev.solidaryhands.network.SessionManager;
@@ -28,10 +36,28 @@ import retrofit2.Response;
 
 public class RegistroActivity extends AppCompatActivity {
 
+    private View pasoRol;
+    private View pasoDatos;
+    private View pasoAcceso;
+    private TextView txtPasoRegistro;
+    private View progreso1;
+    private View progreso2;
+    private View progreso3;
+    private int pasoActual = 1;
+
+    private RadioGroup grupoRol;
+    private String rolSeleccionado;
+
     private EditText edtNombre;
     private EditText edtApPaterno;
     private EditText edtApMaterno;
     private EditText edtTelefono;
+    private EditText edtCiudad;
+    private LinearLayout contenedorDatosFundacion;
+    private EditText edtNombreFundacion;
+    private EditText edtDescripcionFundacion;
+    private EditText edtDireccionFundacion;
+
     private EditText edtCorreo;
     private EditText edtRegistroContrasena;
     private Button btnRegistrar;
@@ -42,175 +68,275 @@ public class RegistroActivity extends AppCompatActivity {
         setContentView(R.layout.activity_registro);
         UiInsets.aplicar(this, R.id.registroContent, R.id.registroContent, true, false);
 
-        // CONECTAR CAMPOS XML
-        edtNombre = findViewById(R.id.edtNombre);
-        edtApPaterno = findViewById(R.id.edtApPaterno);
-        edtApMaterno = findViewById(R.id.edtApMaterno);
-        edtTelefono = findViewById(R.id.edtTelefono);
-        edtCorreo = findViewById(R.id.edtCorreo);
-        edtRegistroContrasena = findViewById(R.id.edtRegistroContrasena);
-        btnRegistrar = findViewById(R.id.btnRegistrar);
+        txtPasoRegistro = findViewById(R.id.txtPasoRegistro);
+        progreso1 = findViewById(R.id.progresoRegistro1);
+        progreso2 = findViewById(R.id.progresoRegistro2);
+        progreso3 = findViewById(R.id.progresoRegistro3);
 
-        // BOTON REGISTRAR
+        FrameLayout contenedor = findViewById(R.id.contenedorRegistro);
+        LayoutInflater inflater = LayoutInflater.from(this);
+        pasoRol = inflater.inflate(R.layout.registro_paso_rol, contenedor, false);
+        pasoDatos = inflater.inflate(R.layout.registro_paso_datos, contenedor, false);
+        pasoAcceso = inflater.inflate(R.layout.registro_paso_acceso, contenedor, false);
+        contenedor.addView(pasoRol);
+        contenedor.addView(pasoDatos);
+        contenedor.addView(pasoAcceso);
+
+        conectarVistas();
+        configurarAcciones();
+        mostrarPaso(1);
+
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                retroceder();
+            }
+        });
+    }
+
+    private void conectarVistas() {
+        grupoRol = pasoRol.findViewById(R.id.grupoRol);
+
+        edtNombre = pasoDatos.findViewById(R.id.edtNombre);
+        edtApPaterno = pasoDatos.findViewById(R.id.edtApPaterno);
+        edtApMaterno = pasoDatos.findViewById(R.id.edtApMaterno);
+        edtTelefono = pasoDatos.findViewById(R.id.edtTelefono);
+        edtCiudad = pasoDatos.findViewById(R.id.edtCiudad);
+        contenedorDatosFundacion = pasoDatos.findViewById(R.id.contenedorDatosFundacion);
+        edtNombreFundacion = pasoDatos.findViewById(R.id.edtNombreFundacion);
+        edtDescripcionFundacion = pasoDatos.findViewById(R.id.edtDescripcionFundacion);
+        edtDireccionFundacion = pasoDatos.findViewById(R.id.edtDireccionFundacion);
+
+        edtCorreo = pasoAcceso.findViewById(R.id.edtCorreo);
+        edtRegistroContrasena = pasoAcceso.findViewById(R.id.edtRegistroContrasena);
+        btnRegistrar = pasoAcceso.findViewById(R.id.btnRegistrar);
+    }
+
+    private void configurarAcciones() {
+        findViewById(R.id.btnVolverRegistro).setOnClickListener(v -> retroceder());
+
+        pasoRol.findViewById(R.id.btnSiguienteRol).setOnClickListener(v -> {
+            int seleccion = grupoRol.getCheckedRadioButtonId();
+            if (seleccion != R.id.radioDonante && seleccion != R.id.radioFundacion) {
+                Toast.makeText(this, "Selecciona Donante o Fundación.", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            rolSeleccionado = seleccion == R.id.radioFundacion
+                    ? RolUsuario.FUNDACION : RolUsuario.DONANTE;
+            configurarFormularioSegunRol();
+            mostrarPaso(2);
+        });
+
+        pasoDatos.findViewById(R.id.btnSiguienteDatos).setOnClickListener(v -> {
+            if (!validarDatosPersonales()) return;
+            actualizarResumenAcceso();
+            mostrarPaso(3);
+        });
+
+        pasoAcceso.findViewById(R.id.btnAnteriorAcceso).setOnClickListener(v -> mostrarPaso(2));
         btnRegistrar.setOnClickListener(v -> registrarUsuarioSupabase());
     }
 
-    private void registrarUsuarioSupabase() {
-        String nombre = edtNombre.getText().toString().trim();
-        String paterno = edtApPaterno.getText().toString().trim();
-        String materno = edtApMaterno.getText().toString().trim();
-        String telefono = edtTelefono.getText().toString().trim();
-        String correo = edtCorreo.getText().toString().trim();
-        String contrasena = edtRegistroContrasena.getText().toString();
+    private void mostrarPaso(int numero) {
+        pasoActual = numero;
+        pasoRol.setVisibility(numero == 1 ? View.VISIBLE : View.GONE);
+        pasoDatos.setVisibility(numero == 2 ? View.VISIBLE : View.GONE);
+        pasoAcceso.setVisibility(numero == 3 ? View.VISIBLE : View.GONE);
+        txtPasoRegistro.setText("Paso " + numero + " de 3");
+        progreso1.setBackgroundResource(R.drawable.bg_step_active);
+        progreso2.setBackgroundResource(numero >= 2 ? R.drawable.bg_step_active : R.drawable.bg_step_track);
+        progreso3.setBackgroundResource(numero >= 3 ? R.drawable.bg_step_active : R.drawable.bg_step_track);
+    }
 
-        // VALIDACIONES
-        if (nombre.isEmpty()) {
-            edtNombre.setError("Ingresa tu nombre");
-            edtNombre.requestFocus();
-            return;
-        }
-
-        if (paterno.isEmpty()) {
-            edtApPaterno.setError("Ingresa tu apellido paterno");
-            edtApPaterno.requestFocus();
-            return;
-        }
-
-        if (materno.isEmpty()) {
-            edtApMaterno.setError("Ingresa tu apellido materno");
-            edtApMaterno.requestFocus();
-            return;
-        }
-
-        if (telefono.isEmpty()) {
-            edtTelefono.setError("Ingresa tu teléfono");
-            edtTelefono.requestFocus();
-            return;
-        }
-
-        if (correo.isEmpty()) {
-            edtCorreo.setError("Ingresa tu correo");
-            edtCorreo.requestFocus();
-            return;
-        }
-
-        if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
-            edtCorreo.setError("Ingresa un correo válido");
-            edtCorreo.requestFocus();
-            return;
-        }
-
-        if (contrasena.isEmpty()) {
-            edtRegistroContrasena.setError("Ingresa una contraseña");
-            edtRegistroContrasena.requestFocus();
-            return;
-        }
-
-        if (contrasena.length() < 6) {
-            edtRegistroContrasena.setError("Debe tener al menos 6 caracteres");
-            edtRegistroContrasena.requestFocus();
-            return;
-        }
-
-        String nombreCompleto = (nombre + " " + paterno + " " + materno).trim();
-
-        // Si la URL de Supabase es la plantilla predeterminada, registrar en modo local de demostración
-        if (SupabaseConfig.SUPABASE_URL.contains("TU_PROYECTO")) {
-            Toast.makeText(RegistroActivity.this, "Registrando usuario...", Toast.LENGTH_SHORT).show();
-            SessionManager.getInstance(RegistroActivity.this)
-                    .saveSession("token_demo", "demo_user", correo, nombreCompleto, telefono);
-
-            Intent intent = new Intent(RegistroActivity.this, HomeActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+    private void retroceder() {
+        if (pasoActual > 1) {
+            mostrarPaso(pasoActual - 1);
+        } else {
             finish();
+        }
+    }
+
+    private void configurarFormularioSegunRol() {
+        boolean fundacion = RolUsuario.FUNDACION.equals(rolSeleccionado);
+        contenedorDatosFundacion.setVisibility(fundacion ? View.VISIBLE : View.GONE);
+        ((TextView) pasoDatos.findViewById(R.id.txtTituloDatosRegistro)).setText(
+                fundacion ? "Datos del representante" : "Tus datos personales"
+        );
+        ((TextView) pasoDatos.findViewById(R.id.txtSubtituloDatosRegistro)).setText(
+                fundacion
+                        ? "Primero necesitamos los datos de contacto y luego los de la fundación."
+                        : "Usaremos esta información para identificar tu cuenta de donante."
+        );
+    }
+
+    private void actualizarResumenAcceso() {
+        TextView resumen = pasoAcceso.findViewById(R.id.txtResumenRolRegistro);
+        if (RolUsuario.FUNDACION.equals(rolSeleccionado)) {
+            resumen.setText("Crearás la cuenta de fundación: "
+                    + edtNombreFundacion.getText().toString().trim());
+        } else {
+            resumen.setText("Crearás una cuenta de donante a nombre de "
+                    + edtNombre.getText().toString().trim() + ".");
+        }
+    }
+
+    private boolean validarDatosPersonales() {
+        if (texto(edtNombre).isEmpty()) return error(edtNombre, "Ingresa tu nombre");
+        if (texto(edtApPaterno).isEmpty()) return error(edtApPaterno, "Ingresa tu apellido paterno");
+        if (texto(edtApMaterno).isEmpty()) return error(edtApMaterno, "Ingresa tu apellido materno");
+        if (texto(edtTelefono).isEmpty()) return error(edtTelefono, "Ingresa tu teléfono");
+        if (texto(edtCiudad).isEmpty()) return error(edtCiudad, "Ingresa tu ciudad");
+
+        if (RolUsuario.FUNDACION.equals(rolSeleccionado)) {
+            if (texto(edtNombreFundacion).isEmpty()) {
+                return error(edtNombreFundacion, "Ingresa el nombre de la fundación");
+            }
+            if (texto(edtDescripcionFundacion).isEmpty()) {
+                return error(edtDescripcionFundacion, "Describe la labor de la fundación");
+            }
+            if (texto(edtDireccionFundacion).isEmpty()) {
+                return error(edtDireccionFundacion, "Ingresa la dirección de la fundación");
+            }
+        }
+        return true;
+    }
+
+    private void registrarUsuarioSupabase() {
+        if (rolSeleccionado == null) {
+            mostrarPaso(1);
+            return;
+        }
+        if (!validarDatosPersonales()) {
+            mostrarPaso(2);
             return;
         }
 
-        // DESHABILITAR BOTÓN MIENTRAS SE PROCESA
-        btnRegistrar.setEnabled(false);
-        btnRegistrar.setText("Registrando en Supabase...");
+        String correo = texto(edtCorreo);
+        String contrasena = edtRegistroContrasena.getText().toString();
+        if (correo.isEmpty()) {
+            error(edtCorreo, "Ingresa tu correo");
+            return;
+        }
+        if (!Patterns.EMAIL_ADDRESS.matcher(correo).matches()) {
+            error(edtCorreo, "Ingresa un correo válido");
+            return;
+        }
+        if (contrasena.length() < 6) {
+            error(edtRegistroContrasena, "Debe tener al menos 6 caracteres");
+            return;
+        }
 
-        // METADATA DEL USUARIO PARA VINCULAR CON PROFILES
+        String nombre = texto(edtNombre);
+        String paterno = texto(edtApPaterno);
+        String materno = texto(edtApMaterno);
+        String telefono = texto(edtTelefono);
+        String ciudad = texto(edtCiudad);
+        String nombreCompleto = (nombre + " " + paterno + " " + materno).trim();
+        String nombreFundacion = texto(edtNombreFundacion);
+
+        if (SupabaseConfig.SUPABASE_URL.contains("TU_PROYECTO")) {
+            SessionManager session = SessionManager.getInstance(this);
+            session.saveSession("token_demo", "demo_user", correo, nombreCompleto, telefono);
+            session.updateUserRole(rolSeleccionado);
+            session.updateFoundationName(nombreFundacion);
+            abrirInicioSegunRol(rolSeleccionado);
+            return;
+        }
+
+        btnRegistrar.setEnabled(false);
+        btnRegistrar.setText("Registrando...");
+
         Map<String, Object> metadata = new HashMap<>();
         metadata.put("nombre", nombre);
         metadata.put("apellido_paterno", paterno);
         metadata.put("apellido_materno", materno);
         metadata.put("telefono", telefono);
+        metadata.put("ciudad", ciudad);
+        metadata.put("rol", rolSeleccionado);
+        if (RolUsuario.FUNDACION.equals(rolSeleccionado)) {
+            metadata.put("nombre_fundacion", nombreFundacion);
+            metadata.put("descripcion_fundacion", texto(edtDescripcionFundacion));
+            metadata.put("direccion_fundacion", texto(edtDireccionFundacion));
+        }
 
-        SignUpRequest signUpRequest = new SignUpRequest(correo, contrasena, metadata);
-
-        SupabaseClient.getInstance(this).getAuthService().signUp(signUpRequest)
+        SignUpRequest request = new SignUpRequest(correo, contrasena, metadata);
+        SupabaseClient.getInstance(this).getAuthService().signUp(request)
                 .enqueue(new Callback<AuthResponse>() {
                     @Override
                     public void onResponse(Call<AuthResponse> call, Response<AuthResponse> response) {
-                        btnRegistrar.setEnabled(true);
-                        btnRegistrar.setText("Registrar");
+                        habilitarBoton();
+                        if (!response.isSuccessful() || response.body() == null) {
+                            Toast.makeText(RegistroActivity.this,
+                                    SupabaseError.mensajeRegistro(response), Toast.LENGTH_LONG).show();
+                            return;
+                        }
 
-                        if (response.isSuccessful() && response.body() != null) {
-                            AuthResponse authResp = response.body();
-                            User user = authResp.getUser();
-                            String userId = user != null ? user.getId() : null;
-                            String token = authResp.getAccessToken();
+                        AuthResponse auth = response.body();
+                        User user = auth.getUser();
+                        String userId = user != null ? user.getId() : null;
+                        String token = auth.getAccessToken();
 
-                            String nombreCompleto = (nombre + " " + paterno + " " + materno).trim();
-
-                            // Si la confirmación de correo está desactivada y devuelve token, iniciamos sesión
-                            if (token != null && !token.isEmpty() && userId != null) {
-                                SessionManager.getInstance(RegistroActivity.this)
-                                        .saveSession(token, userId, correo, nombreCompleto, telefono);
-                                SessionManager.getInstance(RegistroActivity.this)
-                                        .saveRefreshToken(authResp.getRefreshToken());
-
-                                // Respaldo: asegurar perfil en la tabla profiles
-                                asegurarPerfilEnBaseDeDatos(userId, correo, nombre, paterno, materno, telefono);
-
-                                Toast.makeText(RegistroActivity.this, "¡Registro exitoso! Bienvenido.", Toast.LENGTH_SHORT).show();
-
-                                Intent intent = new Intent(RegistroActivity.this, HomeActivity.class);
-                                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                                startActivity(intent);
-                                finish();
-                            } else {
-                                // Supabase NO devolvió sesión: tiene activada la confirmación de correo.
-                                Toast.makeText(RegistroActivity.this,
-                                        "¡Cuenta creada! Revisa tu correo y abre el enlace de confirmación antes de iniciar sesión.",
-                                        Toast.LENGTH_LONG).show();
-                                finish();
-                            }
+                        if (token != null && !token.isEmpty() && userId != null) {
+                            SessionManager session = SessionManager.getInstance(RegistroActivity.this);
+                            session.saveSession(token, userId, correo, nombreCompleto, telefono);
+                            session.saveRefreshToken(auth.getRefreshToken());
+                            session.updateUserRole(rolSeleccionado);
+                            session.updateFoundationName(nombreFundacion);
+                            asegurarPerfilEnBaseDeDatos(userId, correo, nombre, paterno, materno, telefono);
+                            Toast.makeText(RegistroActivity.this,
+                                    "¡Cuenta creada correctamente!", Toast.LENGTH_SHORT).show();
+                            abrirInicioSegunRol(rolSeleccionado);
                         } else {
                             Toast.makeText(RegistroActivity.this,
-                                    SupabaseError.mensajeRegistro(response),
+                                    "Cuenta creada. Revisa tu correo antes de iniciar sesión.",
                                     Toast.LENGTH_LONG).show();
+                            finish();
                         }
                     }
 
                     @Override
-                    public void onFailure(Call<AuthResponse> call, Throwable t) {
-                        btnRegistrar.setEnabled(true);
-                        btnRegistrar.setText("Registrar");
-
-                        if (t instanceof UnknownHostException) {
-                            Toast.makeText(RegistroActivity.this,
-                                    "Sin conexión a internet. Verifica tu red e intenta de nuevo.",
-                                    Toast.LENGTH_LONG).show();
-                        } else {
-                            Toast.makeText(RegistroActivity.this, "Error de red: " + t.getMessage(), Toast.LENGTH_LONG).show();
-                        }
+                    public void onFailure(Call<AuthResponse> call, Throwable throwable) {
+                        habilitarBoton();
+                        String mensaje = throwable instanceof UnknownHostException
+                                ? "Sin conexión a internet."
+                                : "Error de red: " + throwable.getMessage();
+                        Toast.makeText(RegistroActivity.this, mensaje, Toast.LENGTH_LONG).show();
                     }
                 });
     }
 
-    private void asegurarPerfilEnBaseDeDatos(String userId, String email, String nombre, String pat, String mat, String tel) {
-        Perfil perfil = new Perfil(userId, email, nombre, pat, mat, tel);
+    private void asegurarPerfilEnBaseDeDatos(String userId, String correo, String nombre,
+                                               String paterno, String materno, String telefono) {
+        Perfil perfil = new Perfil(userId, correo, nombre, paterno, materno, telefono);
         SupabaseClient.getInstance(this).getDbService()
                 .upsertProfile("resolution=merge-duplicates", perfil)
                 .enqueue(new Callback<Void>() {
-                    @Override
-                    public void onResponse(Call<Void> call, Response<Void> response) {}
-
-                    @Override
-                    public void onFailure(Call<Void> call, Throwable t) {}
+                    @Override public void onResponse(Call<Void> call, Response<Void> response) {}
+                    @Override public void onFailure(Call<Void> call, Throwable throwable) {}
                 });
+    }
+
+    private void abrirInicioSegunRol(String rol) {
+        Class<?> destino = RolUsuario.FUNDACION.equals(rol)
+                ? PanelFundacionActivity.class : HomeActivity.class;
+        Intent intent = new Intent(this, destino);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
+    }
+
+    private void habilitarBoton() {
+        btnRegistrar.setEnabled(true);
+        btnRegistrar.setText("Registrarse");
+    }
+
+    private String texto(EditText campo) {
+        return campo.getText().toString().trim();
+    }
+
+    private boolean error(EditText campo, String mensaje) {
+        campo.setError(mensaje);
+        campo.requestFocus();
+        return false;
     }
 }

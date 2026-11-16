@@ -27,6 +27,7 @@ public class PerfilActivity extends AppCompatActivity {
     private TextView txtNombreCompleto;
     private TextView txtCorreoPerfil;
     private TextView txtTelefonoPerfil;
+    private TextView txtRolPerfil;
     private ProgressBar progresoPerfil;
 
     private LinearLayout cardSeccionFundaciones;
@@ -49,6 +50,7 @@ public class PerfilActivity extends AppCompatActivity {
         txtNombreCompleto = findViewById(R.id.txtNombreCompleto);
         txtCorreoPerfil = findViewById(R.id.txtCorreoPerfil);
         txtTelefonoPerfil = findViewById(R.id.txtTelefonoPerfil);
+        txtRolPerfil = findViewById(R.id.txtRolPerfil);
         progresoPerfil = findViewById(R.id.progresoPerfil);
 
         cardSeccionFundaciones = findViewById(R.id.cardSeccionFundaciones);
@@ -101,6 +103,7 @@ public class PerfilActivity extends AppCompatActivity {
 
             String tel = sessionManager.getUserPhone();
             txtTelefonoPerfil.setText((tel == null || tel.isEmpty()) ? "+591 71234567" : tel);
+            txtRolPerfil.setText(sessionManager.isFoundation() ? "Fundación" : "Donante");
         }
     }
 
